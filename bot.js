@@ -1,3 +1,5 @@
+//VERSION = 14.7
+
 //https://discordapp.com/oauth2/authorize?client_id=595240806953123840&scope=bot&permissions=9999999999
 
 const Discord = require('discord.js');
@@ -95,7 +97,7 @@ client.on("message", async message => {
     try {
   await type(message.channel,true,3);
   var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-  await sendRandomEmbed(message.channel,"command list:",`\n ~help \n ~userinfo \n ~avatar \n ~randomhex \n ~eval`);
+  await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
 	await type(message.channel,false,0)
       return;
     } catch (e) {
@@ -164,6 +166,51 @@ var after = `${replace}`;
         return await type(message.channel,false,0);
       }
     }
+
+    if (command === "cmd") {
+      let ownerID = `${config.owner}`
+      if (message.author.id !== ownerID) {
+        return;
+      }
+  let code = args.join(" ");
+  
+    const util = require('util');
+          const exec = util.promisify(require('child_process').exec);
+  
+          async function ls(b) {
+            const {
+              stdout,
+              stderr
+            } = await exec(`${b}`);
+            if (`${stdout}` == "") {
+              if (`${stderr}` !== "") {
+                output = stderr;
+              } else {
+                output = "output: " + stdout;
+              }
+            } else {
+              output = "output: " + stdout;
+            }
+            if (`${stdout}` == "" | `${stderr}` == "") {
+              output = "output: " + stdout + "\n error: " + stderr;
+            }
+            return await message.channel.send("note: (ignore blank errors/outputs)\n" + `\`\`\`cmd\n${output}\n\`\`\``);
+          }
+  ls(`${code}`);
+  }
+
+    if(command === "yiff") {
+      const strx = args.join(" ");
+      await yiff.e621.CubFilter(`${strx}`).then(async(r) => {
+        var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+        const embed = new Discord.RichEmbed()
+            .setColor(RandomNoHash)
+            .setAuthor("e621")
+            .setImage(r.image)
+            .setFooter(`Artist: ${r.artist.join(" ")} | Score: ${r.score} | Fav. Count: ${r.fav_count} | ID: ${r.postID}`);
+        return await message.channel.send(embed);
+    });
+  };
 
 });
 
