@@ -3,11 +3,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
-const rp = require('discord-rich-presence')('');
-const colors = require('colors');
-const async = require("async");
-const asyncio = require("asyncio");
-const util = require("util");
 const io = require('@pm2/io');
 let yiff = require('yiff');
 
@@ -29,8 +24,6 @@ function sleep(delay) {
   while (new Date().getTime() < start + delay);
 }
 
-var http = require('https');
-var fs = require('fs');
 
 async function type(channel,bool,number) {	
 if(`${bool}` === `true`) {
@@ -48,10 +41,6 @@ function clean(text) {
     return text;
 }
 
-//to type do function: type(message.channel,true,3)
-//stop typing is: type(message.channel,false,0)
-
-let ownerID = `${config.owner}`;
 
 
 
@@ -60,11 +49,6 @@ client.on("ready", () => {
   console.log("loaded".green)
 });
 
-function sendCodeBlock(channel,message,lang,MessageBefore) {
-if(`${lang}` === "") { lang = "xl"; }
-if(`${MessageBefore}` !== "") { channel.send(`${MessageBefore}`); }
-channel.send("```" + lang + "\n" + "" +  message + "\n```");	
-}
 
 async function sendRandomEmbed(channel,title,message,hex,image) {
   if(!hex || hex === 0) {
@@ -92,16 +76,7 @@ client.on("message", async message => {
 
 
   if (command === "help") {
-    if (config.selfbot === "true") {
-      if (message.author.id !== config.owner) {
-        return;
-      }
-    }
-    let blacklist = `${config.blacklist}`
-    if (message.author.id == blacklist) {
-      return;
-    }
-    try {
+ try {
   await type(message.channel,true,3);
   var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
   await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
