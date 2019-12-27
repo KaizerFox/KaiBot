@@ -99,8 +99,8 @@ client.on("message", async message => {
     let ID = member.id
     let HighestRole = member.highestRole.name
     let JoinedAt = member.joinedAt
-    await type(message.channel,true,3);
-    await message.channel.send(`name: ${User}, id: ${ID}, Join Date: ${JoinedAt}, Highest role: ${HighestRole}, Avatar: ${Avatar}`);
+    await type(message.channel,true,3); 
+    await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`);
     return await type(message.channel,false,0);
   }
 
