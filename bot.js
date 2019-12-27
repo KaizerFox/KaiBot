@@ -1,5 +1,3 @@
-//VERSION = 14.7
-
 //https://discordapp.com/oauth2/authorize?client_id=595240806953123840&scope=bot&permissions=9999999999
 
 const Discord = require('discord.js');
@@ -68,14 +66,23 @@ if(`${MessageBefore}` !== "") { channel.send(`${MessageBefore}`); }
 channel.send("```" + lang + "\n" + "" +  message + "\n```");	
 }
 
-async function sendRandomEmbed(channel,title,message,hex) {
-  if(!hex) {
+async function sendRandomEmbed(channel,title,message,hex,image) {
+  if(!hex || hex === 0) {
   hex = (Math.random() * 0xFFFFFF << 0).toString(16);
   } 
+  if(!image) {
   error = new Discord.RichEmbed()
     .setColor(hex)
     .addField(`${title}`, `${message}`),
     await channel.sendEmbed(error)
+  } else {
+    error = new Discord.RichEmbed()
+    .setColor(hex)
+    .setImage(`${image}`)
+    .addField(`${title}`, `${message}`),
+    await channel.sendEmbed(error)
+  }
+
 }
 
 client.on("message", async message => {
@@ -130,7 +137,7 @@ var replace = mystring.replace(`?size=2048`,'?size=4096');
 var after = `${replace}`;
 
   await type(message.channel,true,3);
-  await message.channel.send(`Avatar: ${after}`);
+  await sendRandomEmbed(message.channel,"Avatar:",`${after}`,0,`${after}`);
   return await type(message.channel,false,0);
   }
 
@@ -211,6 +218,16 @@ var after = `${replace}`;
         return await message.channel.send(embed);
     });
   };
+
+  if (command === "die") {
+    if (message.author.id !== config.owner) {
+      return;
+    }
+  message.channel.send(":(");
+  sleep(100);
+  process.exit(0);
+  }
+
 
 });
 
