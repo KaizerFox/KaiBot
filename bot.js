@@ -3,6 +3,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
+const colors = require("colors");
 const io = require('@pm2/io');
 let yiff = require('yiff');
 
