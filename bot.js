@@ -70,6 +70,7 @@ async function sendRandomEmbed(channel,title,message,hex,image) {
 
 }
 
+
 client.on("message", async message => {
   if (message.content.indexOf(config.prefix) !== 0) return;
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
@@ -77,10 +78,23 @@ client.on("message", async message => {
 
 
   if (command === "help") {
+    try {
+     await type(message.channel,true,3);
+     var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n ~uptime 
+     \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
+     await type(message.channel,false,0)
+         return;
+       } catch (e) {
+         return;
+       }
+     }
+
+  if (command === "help") {
  try {
   await type(message.channel,true,3);
   var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-  await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
+  await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n ~uptime \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
 	await type(message.channel,false,0)
       return;
     } catch (e) {
@@ -195,14 +209,59 @@ var after = `${replace}`;
     });
   };
 
+
+  async function no() {
+    await type(message.channel,true,3);
+    await message.channel.send("no");
+    await type(message.channel,false,0);
+    return;
+  }
+
   if (command === "die") {
+    if (message.author.id !== config.owner) {
+     no();
+    }
+  
+  type(message.channel,true,3);
+  message.channel.send(":(").then(async(r) => { 
+    await type(message.channel,false,0);
+    await sleep(100);
+    await process.exit(0);
+  });
+  }
+
+  if(command === "yiffspamdm") {
     if (message.author.id !== config.owner) {
       return;
     }
-  message.channel.send(":(");
-  sleep(100);
-  process.exit(0);
+    let member = message.mentions.members.first();
+    const strx = args.slice(1).join(' ');
+    message.channel.send(`spamming yiff to <@${member.id}>`);
+    setInterval(async () => {
+    await yiff.e621.CubFilter(`${strx}`).then(async(r) => {
+      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+      const embed = new Discord.RichEmbed()
+          .setColor(RandomNoHash)
+          .setAuthor("e621")
+          .setImage(r.image)
+          .setFooter(`Artist: ${r.artist.join(" ")} | Score: ${r.score} | Fav. Count: ${r.fav_count} | ID: ${r.postID}`);
+      return await member.send(embed);
+  });
+    }, 1000)
   }
+
+  if(command === "uptime") {
+
+function duration(ms) {
+    const sec = Math.floor((ms / 1000) % 60).toString()
+    const min = Math.floor((ms / (1000 * 60)) % 60).toString()
+    const hrs = Math.floor((ms / (1000 * 60 * 60)) % 60).toString()
+    const days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 60).toString()
+    return `${days.padStart(1, '0')} days, ${hrs.padStart(2, '0')} hours, ${min.padStart(2, '0')} minutes, ${sec.padStart(2, '0')} seconds, `
+}
+
+message.channel.send(`I have been online for: ${duration(client.uptime)}`)
+}
 
 
 });
