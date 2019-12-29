@@ -1,5 +1,5 @@
 {
-  "name": "hmm465bot",
+  "name": "parse-time",
   "version": "1.0.0",
   "main": "bot.js",
   "dependencies": {
