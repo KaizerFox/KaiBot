@@ -83,24 +83,12 @@ client.on("message", async message => {
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
      await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n ~uptime 
      \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
-     await type(message.channel,false,0)
+     await type(message.channel,false,0);
          return;
        } catch (e) {
          return;
        }
      }
-
-  if (command === "help") {
- try {
-  await type(message.channel,true,3);
-  var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-  await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n ~uptime \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
-	await type(message.channel,false,0)
-      return;
-    } catch (e) {
-      return;
-    }
-  }
 
   if (command === "userinfo") {
     let member = message.mentions.members.first() || message.guild.members.get(args[0]);
@@ -151,16 +139,12 @@ var after = `${replace}`;
   
         if (typeof evaled !== "string")
           evaled = require("util").inspect(evaled);
-         
-        await type(message.channel,true,3);
+        
         await message.channel.send(clean(evaled), {
           code: "xl"
         });
-        return await type(message.channel,false,0);
       } catch (err) {
-        await type(message.channel,true,3);
         await message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
-        return await type(message.channel,false,0);
       }
     }
 
@@ -198,6 +182,7 @@ var after = `${replace}`;
 
     if(command === "yiff") {
       const strx = args.join(" ");
+      try{ 
       await yiff.e621.CubFilter(`${strx}`).then(async(r) => {
         var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
         const embed = new Discord.RichEmbed()
@@ -207,21 +192,19 @@ var after = `${replace}`;
             .setFooter(`Artist: ${r.artist.join(" ")} | Score: ${r.score} | Fav. Count: ${r.fav_count} | ID: ${r.postID}`);
         return await message.channel.send(embed);
     });
+  } catch(e) {
+    message.channel.send("sorry i couldnt find those tags :(");
+    return;
+  }
   };
 
 
-  async function no() {
-    await type(message.channel,true,3);
-    await message.channel.send("no");
-    await type(message.channel,false,0);
-    return;
-  }
 
   if (command === "die") {
     if (message.author.id !== config.owner) {
-     no();
+     message.channel.send("no");
+     return;
     }
-  
   type(message.channel,true,3);
   message.channel.send(":(").then(async(r) => { 
     await type(message.channel,false,0);
@@ -248,6 +231,23 @@ var after = `${replace}`;
       return await member.send(embed);
   });
     }, 1000)
+  }
+
+  if(command === "spamdm") {
+    if (message.author.id !== config.owner) {
+      return;
+    }
+    let member = message.mentions.members.first();
+    const strx = args.slice(1).join(' ');
+    message.channel.send(`spamming <@${member.id}>`);
+    try {
+    setInterval(async () => {
+      return await member.send(`${strx}`);
+    }, 1000);
+  } catch(e) {
+    await message.channel.send(`${e.message}`);
+    return;
+  }
   }
 
   if(command === "uptime") {
