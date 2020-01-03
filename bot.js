@@ -131,6 +131,7 @@ var after = `${replace}`;
     if (command === "eval") {
       let ownerID = `${config.owner}`
       if (message.author.id !== ownerID) {
+        message.channel.send("this was made owner only in case of abuse");
         return;
       }
       try {
@@ -215,6 +216,7 @@ var after = `${replace}`;
 
   if(command === "yiffspamdm") {
     if (message.author.id !== config.owner) {
+      message.channel.send("this was made owner only in case of abuse");
       return;
     }
     let member = message.mentions.members.first();
@@ -235,6 +237,7 @@ var after = `${replace}`;
 
   if(command === "spamdm") {
     if (message.author.id !== config.owner) {
+      message.channel.send("this was made owner only in case of abuse");
       return;
     }
     let member = message.mentions.members.first();
