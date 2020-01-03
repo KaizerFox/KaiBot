@@ -51,21 +51,29 @@ client.on("ready", () => {
 });
 
 
-async function sendRandomEmbed(channel,title,message,hex,image) {
+async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
   if(!hex || hex === 0) {
   hex = (Math.random() * 0xFFFFFF << 0).toString(16);
   } 
-  if(!image) {
-  error = new Discord.RichEmbed()
+  if(!image && !thumbnail) {
+  embed = new Discord.RichEmbed()
     .setColor(hex)
     .addField(`${title}`, `${message}`),
-    await channel.sendEmbed(error)
-  } else {
-    error = new Discord.RichEmbed()
+    await channel.sendEmbed(embed)
+  }
+  if(!image && thumbnail) {
+    embed = new Discord.RichEmbed()
+    .setColor(hex)
+    .setThumbnail(`${thumbnail}`)
+    .addField(`${title}`, `${message}`),
+    await channel.sendEmbed(embed)
+  }
+  if(image) {
+    embed = new Discord.RichEmbed()
     .setColor(hex)
     .setImage(`${image}`)
     .addField(`${title}`, `${message}`),
-    await channel.sendEmbed(error)
+    await channel.sendEmbed(embed)
   }
 
 }
@@ -78,11 +86,12 @@ client.on("message", async message => {
 
 
   if (command === "help") {
+    let p = `${config.prefix}`
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ~help \n ~userinfo [@user] \n ~avatar [@user] \n ~randomhex \n ~uptime 
-     \n \n Owner Only: \n ~eval [code] \n ~cmd [windows command]`);
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}userinfo [@user] \n ${p}avatar [@user] \n ${p}randomhex \n ${p}uptime 
+     \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command]`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
@@ -101,8 +110,9 @@ client.on("message", async message => {
     let ID = member.id
     let HighestRole = member.highestRole.name
     let JoinedAt = member.joinedAt
+    let Avatar = member.user.avatarURL
     await type(message.channel,true,3); 
-    await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`);
+    await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`,0,0,`${Avatar}`);
     return await type(message.channel,false,0);
   }
 
