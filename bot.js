@@ -6,6 +6,7 @@ const config = require('./config.json');
 const colors = require("colors");
 const io = require('@pm2/io');
 let yiff = require('yiff');
+const weather = require("weather-js");
 
 const die = require("discord.js/src/util/Constants.js");
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
@@ -99,22 +100,44 @@ client.on("message", async message => {
        }
      }
 
-  if (command === "userinfo") {
-    let member = message.mentions.members.first() || message.guild.members.get(args[0]);
-    if (!member) {
-      await type(message.channel,true,3);
-      await message.reply("usage: !userinfo [@user]");
-      return await type(message.channel,false,0);
+     if (command === "userinfo") {
+      let member = message.mentions.members.first() || message.guild.members.get(args[0]);
+      if (!member) {
+        await type(message.channel,true,3);
+        await message.reply("usage: !userinfo [@user]");
+        return await type(message.channel,false,0);
+      }
+      let User = member.user
+      let UserName = member.user.username
+      let Color = member.displayHexColor
+        let ID = member.id
+      let Avatar = member.user.avatarURL
+      let HighestRole = member.highestRole.name
+      let JoinedAt = member.joinedAt
+    
+      if(member.user.bot == false) {
+        emo = "❌";
+      } else {
+        emo = "✅";
+      }
+    
+          const embed = new Discord.RichEmbed()
+              .setColor(`${Color}`)
+              .setThumbnail(`${Avatar}`)
+              .setTitle(`${UserName}'s Info`)
+              .setFooter(`bot account: ${emo}`)
+              .setDescription(`• Nickname: ${member.nickname}
+              • ID: ${ID}
+              • Join Date: ${JoinedAt} 
+              • Created at: ${User.createdAt}
+              • Highest role: ${HighestRole}
+              • Status: ${User.presence.status}
+              • Game: ${User.presence.game ? User.presence.game.name : 'None'}`);
+          return await message.channel.send(embed);
+      //await type(message.channel,true,3); 
+      //await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`);
+      //return await type(message.channel,false,0);
     }
-    let User = member
-    let ID = member.id
-    let HighestRole = member.highestRole.name
-    let JoinedAt = member.joinedAt
-    let Avatar = member.user.avatarURL
-    await type(message.channel,true,3); 
-    await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`,0,0,`${Avatar}`);
-    return await type(message.channel,false,0);
-  }
 
   if (command === "avatar") {
   let member = message.mentions.members.first() || message.guild.members.get(args[0]);
@@ -141,7 +164,7 @@ var after = `${replace}`;
     if (command === "eval") {
       let ownerID = `${config.owner}`
       if (message.author.id !== ownerID) {
-        message.channel.send("this was made owner only in case of abuse");
+        message.channel.send("this was made ownyew onywy iny case of abuse");
         return;
       }
       try {
@@ -192,6 +215,7 @@ var after = `${replace}`;
   }
 
     if(command === "yiff") {
+      if(message.channel.nsfw || message.channel.type == "dm") {
       const strx = args.join(" ");
       try{ 
       await yiff.e621.CubFilter(`${strx}`).then(async(r) => {
@@ -204,10 +228,14 @@ var after = `${replace}`;
         return await message.channel.send(embed);
     });
   } catch(e) {
-    message.channel.send("sorry i couldnt find those tags :(");
+    message.channel.send("sowwy i couwdnyt finyd those tags :(");
     return;
-  }
-  };
+  } 
+} else {
+  message.channel.send("no");
+  return;
+}
+};
 
 
 
@@ -226,7 +254,7 @@ var after = `${replace}`;
 
   if(command === "yiffspamdm") {
     if (message.author.id !== config.owner) {
-      message.channel.send("this was made owner only in case of abuse");
+      message.channel.send("this was made ownyew onywy iny case of abuse");
       return;
     }
     let member = message.mentions.members.first();
@@ -247,7 +275,7 @@ var after = `${replace}`;
 
   if(command === "spamdm") {
     if (message.author.id !== config.owner) {
-      message.channel.send("this was made owner only in case of abuse");
+      message.channel.send("this was made ownyew onywy iny case of abuse");
       return;
     }
     let member = message.mentions.members.first();
@@ -277,6 +305,37 @@ var after = `${replace}`;
 message.channel.send(`I have been online for: ${duration(client.uptime)}`)
 }
 
+if(command === "weather") {
+  weather.find({search: args.join(" "), degreeType: 'F'}, function(err, result) { // Make sure you get that args.join part, since it adds everything after weather.
+    if (err) message.channel.send(err);
+
+    // We also want them to know if a place they enter is invalid.
+    if (result.length === 0) {
+        message.channel.send('**Please enter a valid location.**') // This tells them in chat that the place they entered is invalid.
+        return; // This exits the code so the rest doesn't run.
+    }
+
+    // Variables
+    var current = result[0].current; // This is a variable for the current part of the JSON output
+    var location = result[0].location; // This is a variable for the location part of the JSON output
+
+    // Let's use an embed for this.
+    const embed = new Discord.RichEmbed()
+        .setDescription(`**${current.skytext}**`) // This is the text of what the sky looks like, remember you can find all of this on the weather-js npm page.
+        .setAuthor(`Weather for ${current.observationpoint}`) // This shows the current location of the weather.
+        .setThumbnail(current.imageUrl) // This sets the thumbnail of the embed
+        .setColor(0x00AE86) // This sets the color of the embed, you can set this to anything if you look put a hex color picker, just make sure you put 0x infront of the hex
+        .addField('Timezone',`UTC${location.timezone}`, true) // This is the first field, it shows the timezone, and the true means `inline`, you can read more about this on the official discord.js documentation
+        .addField('Degree Type',location.degreetype, true)// This is the field that shows the degree type, and is inline
+        .addField('Temperature',`${current.temperature} Degrees`, true)
+        .addField('Feels Like', `${current.feelslike} Degrees`, true)
+        .addField('Winds',current.winddisplay, true)
+        .addField('Humidity', `${current.humidity}%`, true)
+
+        // Now, let's display it when called
+        message.channel.send({embed});
+});
+}
 
 });
 
