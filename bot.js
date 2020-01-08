@@ -7,6 +7,7 @@ const colors = require("colors");
 const io = require('@pm2/io');
 let yiff = require('yiff');
 const weather = require("weather-js");
+const memer = require("discordmeme.js");
 
 const die = require("discord.js/src/util/Constants.js");
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
@@ -237,7 +238,18 @@ var after = `${replace}`;
 }
 };
 
-
+if(command === "hook") {
+  try { await message.delete(); } catch(e) { console.log(`${e.message}`); }
+  try{
+  const strx = args.join(" ");
+  const hook = new Discord.WebhookClient(`${config.hookID}`, `${config.hookToken}`);
+  await hook.send(`${strx}`);
+  } catch(e) {
+    console.log(`${e.message}`);
+    return;
+  }
+  return;
+}
 
   if (command === "die") {
     if (message.author.id !== config.owner) {
@@ -335,6 +347,24 @@ if(command === "weather") {
         // Now, let's display it when called
         message.channel.send({embed});
 });
+}
+
+if (command === "meme") {
+  let meme = await memer.meme()
+
+  const embed = new Discord.RichEmbed()
+  .setTitle('Random Meme')
+  .setImage(meme)
+  .setTimestamp()
+  .setFooter(`KaiBot`, client.user.displayAvatarURL)
+  
+  message.channel.send(embed);
+}
+  
+if (command === "badmeme") {
+  let msg = await message.channel.send("Generating...")
+    memes.generate(client,msg)
+      msg.delete();
 }
 
 });
