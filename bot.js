@@ -92,7 +92,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}userinfo [@user] \n ${p}avatar [@user] \n ${p}randomhex \n ${p}uptime 
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}userinfo [@user] \n ${p}avatar [@user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime 
      \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command]`);
      await type(message.channel,false,0);
          return;
@@ -182,6 +182,36 @@ var after = `${replace}`;
         await message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
       }
     }
+
+    if (command === "color") {
+    const strx = args.join(" ");
+     await type(message.channel,true,3);
+  
+      await sendRandomEmbed(message.channel,"color",`${strx}`,strx);
+      return await type(message.channel,false,0);
+      }
+  
+      if (command === "eval") {
+        let ownerID = `${config.owner}`
+        if (message.author.id !== ownerID) {
+          message.channel.send("this was made ownyew onywy iny case of abuse");
+          return;
+        }
+        try {
+          const code = args.join(" ");
+          let evaled = eval(code);
+    
+          if (typeof evaled !== "string")
+            evaled = require("util").inspect(evaled);
+          
+          await message.channel.send(clean(evaled), {
+            code: "xl"
+          });
+        } catch (err) {
+          await message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+        }
+      }
+  
 
     if (command === "cmd") {
       let ownerID = `${config.owner}`
