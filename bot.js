@@ -1,4 +1,4 @@
-//https://discordapp.com/oauth2/authorize?client_id=595240806953123840&scope=bot&permissions=9999999999
+//https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -8,6 +8,8 @@ const io = require('@pm2/io');
 let yiff = require('yiff');
 const weather = require("weather-js");
 const memer = require("discordmeme.js");
+const owoify = require('owoify-js').default
+const p = `${config.prefix}`;
 
 const die = require("discord.js/src/util/Constants.js");
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
@@ -88,18 +90,40 @@ client.on("message", async message => {
 
 
   if (command === "help") {
-    let p = `${config.prefix}`
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
      await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}userinfo [@user] \n ${p}avatar [@user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime 
-     \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command]`);
+     \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ~hook [message]`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
          return;
        }
      }
+
+     if (command === "owoify") {
+      //args start at 0 (idek)
+      let m = args.slice(1).join(' ');
+      try {
+          if(`${args[0]}` === "1"){ //user would say owoify 1 message
+            console.log("level 1");
+            death = owoify(`${m}`, 'owo');
+          } if(`${args[0]}` === "2"){ //user would say owoify 2 message
+            console.log("level 2");
+           death = owoify(`${m}`, 'uwu');
+          } if(`${args[0]}` === "3"){ //user would say owoify 3 message 
+           console.log("level 3");
+           death = owoify(`${m}`, 'uvu');
+          } if(`${args[0]}` !== "1" && `${args[0]}` !== "2" && `${args[0]}` !== "3") { //if user says anything else but 1 2 and 3
+            console.log("defaulted to level 1");
+             death = owoify(`${m}`, 'owo');
+          }
+          return await message.channel.send(`${death}`);
+         } catch (e) {
+           return;
+         }
+       }
 
      if (command === "userinfo") {
       let member = message.mentions.members.first() || message.guild.members.get(args[0]);
@@ -139,6 +163,28 @@ client.on("message", async message => {
       //await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`);
       //return await type(message.channel,false,0);
     }
+
+    if (command === "addrole") {
+      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+      //var args = message.content.split(" ");
+       //args.shift();
+      
+       if (!args[0]) {
+        await type(message.channel,true,3);
+        await message.reply(`usage: ${p}addrole [name] [color]`);
+        return await type(message.channel,false,0);
+      }
+    
+      message.guild.createRole({
+        name: args[0],
+        color: args[1]
+      })
+      .then(role => {
+      // await type(message.channel,true,3);
+       sendRandomEmbed(message.channel,"Role Created",`${role.name}`,role.hexcolor || RandomNoHash);
+      //  return await type(message.channel,false,0);
+      })
+    };
 
   if (command === "avatar") {
   let member = message.mentions.members.first() || message.guild.members.get(args[0]);
