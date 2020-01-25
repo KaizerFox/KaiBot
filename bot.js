@@ -107,16 +107,12 @@ client.on("message", async message => {
       let m = args.slice(1).join(' ');
       try {
           if(`${args[0]}` === "1"){ //user would say owoify 1 message
-            console.log("level 1");
             death = owoify(`${m}`, 'owo');
           } if(`${args[0]}` === "2"){ //user would say owoify 2 message
-            console.log("level 2");
            death = owoify(`${m}`, 'uwu');
           } if(`${args[0]}` === "3"){ //user would say owoify 3 message 
-           console.log("level 3");
            death = owoify(`${m}`, 'uvu');
           } if(`${args[0]}` !== "1" && `${args[0]}` !== "2" && `${args[0]}` !== "3") { //if user says anything else but 1 2 and 3
-            console.log("defaulted to level 1");
              death = owoify(`${m}`, 'owo');
           }
           return await message.channel.send(`${death}`);
