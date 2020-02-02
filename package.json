@@ -5,7 +5,7 @@
   "dependencies": {
     "async": "^2.6.3",
     "asyncio": "0.0.2",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "colors": "^1.4.0",
     "discord": "",
     "discord-rich-presence": "0.0.6",
@@ -18,7 +18,7 @@
     "node-cmd": "^3.0.0",
     "node-fetch": "^2.6.0",
     "node-gyp": "^4.0.0",
-    "npm": "^6.13.6",
+    "npm": "^6.13.7",
     "owoify-js": "^1.0.7",
     "parse-time": "^0.1.4",
     "pm2": "^3.5.2",
@@ -27,7 +27,7 @@
     "shelljs": "^0.8.3",
     "tar": "^4.4.13",
     "weather-js": "^2.0.0",
-    "yiff": "^1.2.7",
+    "yiff": "^1.2.9",
     "ytdl-core": "^0.29.7"
   },
   "devDependencies": {},
