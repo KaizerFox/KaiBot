@@ -8,6 +8,7 @@ const io = require('@pm2/io');
 let yiff = require('yiff');
 const weather = require("weather-js");
 const memer = require("discordmeme.js");
+const util = require("util");
 const owoify = require('owoify-js').default
 const p = `${config.prefix}`;
 
@@ -29,6 +30,12 @@ function sleep(delay) {
   while (new Date().getTime() < start + delay);
 }
 
+function clean(text) {
+  if (typeof (text) === "string")
+    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  else
+    return text;
+}
 
 async function type(channel,bool,number) {	
 if(`${bool}` === `true`) {
@@ -38,15 +45,6 @@ if(`${bool}` === `false`) {
 return await channel.stopTyping(true);	
 }	
 }
-
-function clean(text) {
-  if (typeof (text) === "string")
-    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
-  else
-    return text;
-}
-
-
 
 
 client.on("ready", () => {
@@ -89,18 +87,97 @@ client.on("message", async message => {
   const command = args.shift().toLowerCase();
 
 
+  if(command === "invite"){
+    try{
+      return await message.channel.send("<https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999>");
+    } catch(e){
+      return await console.log(`${e.message}`);
+    }
+  }
+
   if (command === "help") {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}userinfo [@user] \n ${p}avatar [@user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
-     \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
+     \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
          return;
        }
      }
+
+     if (command === 'stats') {
+      const memoryUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+      const cpu = require('os').cpus().map(i => i.model);
+      const cpuLength = cpu.length;
+      const cpuType = cpu[0];
+      let totalSeconds = (client.uptime / 1000);
+      let days = Math.floor(totalSeconds / 86400);
+      let hours = Math.floor(totalSeconds / 3600);
+      totalSeconds %= 3600;
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = Math.round(totalSeconds % 60);
+      let member = message.author
+      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+      var channels = client.channels.filter(c => c.type === 'text').size
+      var vchannels = client.channels.filter(c => c.type === 'voice').size
+      let owoifyname = owoify(`${member.username}`,"uwu"); 
+      let owoifyCpuLength = owoify(`${cpuLength}`,"owo")
+      let owoifyCpuType = owoify(`${cpuType}`,"owo")
+
+      const embed = new Discord.RichEmbed()
+        .setTitle("📊 Bwowot Stats - Invite")
+        .setURL(`https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999`)
+        .setColor(RandomNoHash)
+        .addField("Guiwd Cwount", `${client.guilds.size}`, true)
+        .addField("Usew Cwount", `${client.users.size}`, true)
+        .addField("Channyews", `Text: ${channels} \n Voice: ${vchannels}`, true)
+        .addField("Pwocesswow", `${owoifyCpuLength}x ${owoifyCpuType}`, true)
+        .addField("Mwemwowwy usage", `${memoryUsage}MB`, true)
+        .addField("Uptimwe", `${days} days, ${hours} hwouws, ${minutes} minyutes and ${seconds} secwonds`, true)
+        .setTimestamp()
+        .setFooter(`Wequested by ${owoifyname}`, member.displayAvatarURL)
+      message.channel.send({ embed });
+      //return message.channel.send(`Guild count: ${client.guilds.size} \n User count: ${client.users.size}`);
+  
+    }
+
+    
+  if (command === "8ball") {
+    var fortunes = [
+      "It is certain.",
+      "It is decidedly so.",
+      "Without a doubt.",
+      "Yes - definitely.",
+      "You may rely on it.",
+      "As I see it, yes.",
+      "Most likely.",
+      "Outlook good.",
+      "Yes.",
+      "Signs point to yes.",
+      "Reply hazy, try again.",
+      "Ask again later.",
+      "Better not tell you now.",
+      "Cannot predict now.",
+      "Concentrate and ask again.",
+      "Don't count on it.",
+      "My reply is no.",
+      "My sources say no.",
+      "Outlook not so good.",
+      "Very doubtful."
+    ]
+
+    // const args = args.join(" ");
+    if (!args[2]) {
+      return message.channel.send("Ask a **FUWW** questiowon ;;w;;");
+    }
+
+    let owoball = owoify(`${fortunes[Math.floor(Math.random() * fortunes.length)]}`,"uwu");
+
+    await sendRandomEmbed(message.channel, `🎱 Magic 8baww`, `${owoball}`, 0x0000FF);
+  }
 
      if (command === "owoify") {
       //args start at 0 (idek)
@@ -120,6 +197,133 @@ client.on("message", async message => {
            return;
          }
        }
+
+       if (command === "ban") {
+
+        if (!message.guild.me.hasPermission(["BAN_MEMBERS", "ADMINISTRATOR"])) return message.channel.send("I dont have permission to do this!")
+    
+        if (message.author.id !== config.owner) {
+          if (!message.member.hasPermission(["BAN_MEMBERS", "ADMINISTRATOR"])) {
+            await type(message.channel, true, 3);
+            var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+            error = new Discord.RichEmbed()
+              .setColor(RandomNoHash)
+              .addField("Error", "Sorry, you don't have permissions to use this!"),
+              await message.channel.sendEmbed(error)
+            await type(message.channel, false, 0)
+            return;
+          }
+        }
+    
+    
+    
+        let member = message.mentions.members.first() || message.guild.members.get(args[0])
+        if (!member) return message.channel.send("Please provide a user to Ban!")
+    
+        if (`${message.author.id}` === `${member.id}`) {
+          await type(message.channel, true, 3);
+          await message.channel.send("I'm not sure why you would ban yourself");
+          return await type(message.channel, false, 0);
+        }
+    
+        if (`${member.id}` === `${config.owner}`) {
+          await type(message.channel, true, 3);
+          await message.channel.send("you can't ban the bot owner.");
+          return await type(message.channel, false, 0);
+        }
+    
+    
+        if (!member.bannable) {
+          await type(message.channel, true, 3);
+          await message.channel.send("guild member is too powerful!");
+          return await type(message.channel, false, 0);
+        }
+    
+        let reason = args.slice(1).join(' ');
+        if (!reason) {
+          reason = "No reason provided";
+        }
+    
+        await member.ban(reason)
+          .catch(async (error) => {
+            await type(message.channel, true, 3);
+            message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`)
+            await type(message.channel, false, 0);
+          });
+    
+        await sendRandomEmbed(message.channel, `Ban Event`, `${member} has been banned by ${message.author} \n reason: ${reason}`, 0xFF0000)
+        return;
+      }
+    
+      if (command === "kick") {
+    
+    
+        if (message.author.id !== config.owner)
+          if (!message.member.hasPermission(["KICK_MEMBERS", "ADMINISTRATOR"])) return message.channel.send("You dont have permission to perform this command!")
+    
+    
+        if (!message.guild.me.hasPermission(["KICK_MEMBERS", "ADMINISTRATOR"])) return message.channel.send("I dont have permission to do this!")
+    
+        let kickMember = message.mentions.members.first() || message.guild.members.get(args[0])
+        if (!kickMember) return message.channel.send("Please provide a user to Kick!")
+    
+        if (`${message.author.id}` === `${kickMember.id}`) {
+          await type(message.channel, true, 3);
+          await message.channel.send("i'm not sure why you would kick yourself");
+          return await type(message.channel, false, 0);
+        }
+    
+        if (`${kickMember.id}` === `${config.owner}`) {
+          await type(message.channel, true, 3);
+          await message.channel.send("you can't kick the bot owner.");
+          return await type(message.channel, false, 0);
+        }
+    
+        if (!kickMember.kickable) {
+          await type(message.channel, true, 3);
+          await message.channel.send("guild member is too powerful!");
+          return await type(message.channel, false, 0);
+        }
+    
+        let reason = args.slice(1).join(' ');
+        if (!reason) {
+          reason = "No reason provided";
+        }
+    
+        await kickMember.kick(reason)
+          .catch(error => sendRandomEmbed(message.channel, `Error`, `Sorry ${message.author}, I couldn't kick because of : ${error}`, 0xFF0000))
+        await sendRandomEmbed(message.channel, `Kick Event`, `${kickMember} has been kicked by ${message.author} \n reason: ${reason}`, 0xFFD000)
+        return;
+    
+        /*let embed = new Discord.RichEmbed()
+        .setColor(colours.redlight)
+        .setAuthor(`${message.guild.name} Modlogs`, message.guild.iconURL)
+        .addField("Moderation:", "kick")
+        .addField("Mutee:", kickMember.user.username)
+        .addField("Moderator:", message.author.username)
+        .addField("Reason:", reason)
+        .addField("Date:", message.createdAt.toLocaleString())
+        
+            let sChannel = message.guild.channels.find(c => c.name === "tut-modlogs")
+            sChannel.send(embed)*/
+    
+      }
+
+      if (command === "ping") {
+        if (!args[0]) {
+          const m = await message.channel.send("pinging...");
+          return await m.edit(`⏱Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
+        } else {
+          try {
+            let strx = args.join(" ");
+            const m = await message.channel.send("ok, pinging...");
+            let msg = await require("child_process").execSync(`ping -n 4 ${strx}`).toString();
+            await m.edit(`${msg}`, { code: "css" });
+          } catch (err) {
+            await message.channel.send(`\`100% packet loss\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+          }
+        }
+      }
 
      if (command === "userinfo") {
       let member = message.mentions.members.first() || message.guild.members.get(args[0]);
@@ -227,32 +431,50 @@ var after = `${replace}`;
 
     if (command === "color") {
     const strx = args.join(" ");
+    if(!strx || `${strx}` === "0") {
+      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+      strx = RandomNoHash
+    }
      await type(message.channel,true,3);
   
       await sendRandomEmbed(message.channel,"color",`${strx}`,strx);
       return await type(message.channel,false,0);
       }
-  
-      if (command === "eval") {
-        let ownerID = `${config.owner}`
-        if (message.author.id !== ownerID) {
-          message.channel.send("this was made ownyew onywy iny case of abuse");
-          return;
+
+      if (command === 'permissions') {
+        if (config.selfbot === "true") {
+          if (message.author.id !== config.owner) {
+            return;
+          }
         }
         try {
-          const code = args.join(" ");
-          let evaled = eval(code);
+          let member = message.mentions.members.first();
     
-          if (typeof evaled !== "string")
-            evaled = require("util").inspect(evaled);
-          
-          await message.channel.send(clean(evaled), {
-            code: "xl"
-          });
-        } catch (err) {
-          await message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+          if(!member) {
+            
+            try{
+              return message.channel.send("usage: ~permissions [@user]");
+            } catch(e) {
+              return console.log(`couldnt send message because: ${e}`);
+            }
+          }
+    
+          await type(message.channel,true,3);
+          try{
+          await message.author.sendMessage(`here is a  list of permssions of ${member}'s permissions in ${message.guild.name}`);
+          await message.author.sendMessage('```json\n' + util.inspect(message.channel.permissionsFor(member).serialize()) + '```');
+          done = true;
+          } catch(e) {
+           return message.channel.send(`<@${message.author.id}> i must be able to dm you to prevent spam.`);
+          }
+          await message.channel.send(`sent a list of ${member}'s permission's to your dms, please check them.`);
+          return await type(message.channel,false,0);
+        } catch (e) {
+          return;
         }
-      }
+      };
+    
+    
   
 
     if (command === "cmd") {
