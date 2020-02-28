@@ -99,7 +99,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}say [message] ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
      \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
      await type(message.channel,false,0);
          return;
@@ -123,9 +123,9 @@ client.on("message", async message => {
       var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
       var channels = client.channels.filter(c => c.type === 'text').size
       var vchannels = client.channels.filter(c => c.type === 'voice').size
-      let owoifyname = owoify(`${member.username}`,"uwu"); 
       let owoifyCpuLength = owoify(`${cpuLength}`,"owo")
       let owoifyCpuType = owoify(`${cpuType}`,"owo")
+      let owoifyname = owoify(`${member.username}`,"uwu"); 
 
       const embed = new Discord.RichEmbed()
         .setTitle("📊 Bwowot Stats - Invite")
@@ -144,6 +144,54 @@ client.on("message", async message => {
   
     }
 
+
+    if (command === "say") {
+      try {
+      message.delete();
+      const strx = args.join(" ");
+      if (!strx) return;
+  
+      await message.channel.startTyping(3);
+      await message.channel.send('`' + `${strx}` + '`');
+      return await message.channel.stopTyping(true);
+      } catch(e) {
+        return await message.channel.send(`${e.message}`);
+      }
+    }
+
+    if (command === "embed") {
+      if (config.selfbot === "true") {
+        if (message.author.id !== config.owner) {
+          return;
+        }
+      }
+      const strx = args.join(" ");
+      if (!strx) return;
+      let msgx = args.slice(1).join(' ');
+      if (!msgx) return;
+      await message.delete().catch(async (O_o) => {});
+  
+      if (strx == "random " + `${msgx}`) {
+        var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+        console.log("randomized color was chosen");
+        await type(message.channel,true,3);
+        let embed = new Discord.RichEmbed()
+          .setColor(RandomNoHash)
+          .setDescription(msgx)
+        await message.channel.sendEmbed(embed)
+        await type(message.channel,false,0)
+        return;
+      } else {
+        console.log("custom color was chosen");
+        await type(message.channel,true,3);
+        let embed = new Discord.RichEmbed()
+          .setColor(strx)
+          .setDescription(msgx)
+        await message.channel.sendEmbed(embed)
+        await type(message.channel,false,0)
+        return;
+      }
+    }
     
   if (command === "8ball") {
     var fortunes = [
@@ -509,28 +557,31 @@ var after = `${replace}`;
   ls(`${code}`);
   }
 
-    if(command === "yiff") {
-      if(message.channel.nsfw || message.channel.type == "dm") {
-      const strx = args.join(" ");
-      try{ 
-      await yiff.e621.CubFilter(`${strx}`).then(async(r) => {
+  if (command === "yiff") {
+    if (message.channel.nsfw === false) {
+      message.channel.send("This channel isn't marked as NSFW.");
+      return;
+    }
+    let msg = await message.channel.send("Searching...");
+    const strx = args.join(" ");
+    try {
+      await yiff.e621.CubFilter(`${strx}`).then(async (r) => {
         var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
         const embed = new Discord.RichEmbed()
-            .setColor(RandomNoHash)
-            .setAuthor("e621")
-            .setImage(r.image)
-            .setFooter(`Artist: ${r.artist.join(" ")} | Score: ${r.score} | Fav. Count: ${r.fav_count} | ID: ${r.postID}`);
-        return await message.channel.send(embed);
-    });
-  } catch(e) {
-    message.channel.send("sowwy i couwdnyt finyd those tags :(");
-    return;
-  } 
-} else {
-  message.channel.send("no");
-  return;
-}
-};
+          .setColor(RandomNoHash)
+          .setURL(r.source)
+          .setTitle("e621 - No Image? [link]")
+          .setImage(r.image)
+          .setFooter(`Artist: ${r.artist.join(" ")} | Score: ${r.score} | Fav. Count: ${r.fav_count} | ID: ${r.postID}`);
+        return await message.channel.send(embed)
+
+      });
+    } catch (e) {
+      await message.channel.send("tag not found (try something else)");
+      return;
+    }
+    await msg.delete();
+  };
 
 if(command === "hook") {
   try { await message.delete(); } catch(e) { console.log(`${e.message}`); }
