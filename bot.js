@@ -126,6 +126,8 @@ client.on("message", async message => {
       let owoifyCpuLength = owoify(`${cpuLength}`,"owo")
       let owoifyCpuType = owoify(`${cpuType}`,"owo")
       let owoifyname = owoify(`${member.username}`,"uwu"); 
+      const oper = require('os').platform
+      const operOwO = owoify(`${oper}`,"uwu");
 
       const embed = new Discord.RichEmbed()
         .setTitle("📊 Bwowot Stats - Invite")
@@ -136,6 +138,7 @@ client.on("message", async message => {
         .addField("Channyews", `Text: ${channels} \n Voice: ${vchannels}`, true)
         .addField("Pwocesswow", `${owoifyCpuLength}x ${owoifyCpuType}`, true)
         .addField("Mwemwowwy usage", `${memoryUsage}MB`, true)
+        .addField("Opewating system", `${operOwO}`,true)
         .addField("Uptimwe", `${days} days, ${hours} hwouws, ${minutes} minyutes and ${seconds} secwonds`, true)
         .setTimestamp()
         .setFooter(`Wequested by ${owoifyname}`, member.displayAvatarURL)
@@ -363,10 +366,20 @@ client.on("message", async message => {
           return await m.edit(`⏱Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
         } else {
           try {
+            const oper = require('os').platform
+            if(`${oper}` === "win32" || `${oper}` === "win64") {
+            console.log(`os is ${oper}`);
             let strx = args.join(" ");
             const m = await message.channel.send("ok, pinging...");
             let msg = await require("child_process").execSync(`ping -n 4 ${strx}`).toString();
             await m.edit(`${msg}`, { code: "css" });
+          } else {
+            console.log("os is something other than windows, assuming its linux.");
+            let strx = args.join(" ");
+            const m = await message.channel.send("ok, pinging...");
+            let msg = await require("child_process").execSync(`ping -l 3 ${strx}`).toString();
+            await m.edit(`${msg}`, { code: "css" });
+          }
           } catch (err) {
             await message.channel.send(`\`100% packet loss\` \`\`\`xl\n${clean(err)}\n\`\`\``);
           }
