@@ -377,7 +377,7 @@ client.on("message", async message => {
             console.log("os is something other than windows, assuming its linux.");
             let strx = args.join(" ");
             const m = await message.channel.send("ok, pinging...");
-            let msg = await require("child_process").execSync(`ping -l 3 ${strx}`).toString();
+            let msg = await require("child_process").execSync(`ping -c 4 ${strx}`).toString();
             await m.edit(`${msg}`, { code: "css" });
           }
           } catch (err) {
