@@ -387,7 +387,7 @@ client.on("message", async message => {
       }
 
      if (command === "userinfo") {
-      let member = message.mentions.members.first() || message.guild.members.get(args[0]);
+      let member = message.mentions.members.first() || message.guild.members.get(args[0]); 
       if (!member) {
         await type(message.channel,true,3);
         await message.reply("usage: !userinfo [@user]");
