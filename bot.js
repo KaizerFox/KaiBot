@@ -99,7 +99,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}say [message] ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
      \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
      await type(message.channel,false,0);
          return;
@@ -146,6 +146,45 @@ client.on("message", async message => {
       //return message.channel.send(`Guild count: ${client.guilds.size} \n User count: ${client.users.size}`);
   
     }
+
+    if (command === "addrole") {
+      let nam = args.slice(1).join(" ");
+      if (!nam) return;
+
+      const col = args.slice(0).join(" ")
+
+var mystring = `${col}`;
+mystring = mystring.replace(`${nam}`,'');
+let colnew = mystring; 
+
+      if (!col) { return await message.channel.send(`${p}addrole [color] [name]`); }
+      await message.delete().catch(async (O_o) => {});
+
+      if (message.author.id !== config.owner) {
+        if (!message.member.hasPermission(["ADMINISTRATOR"])) {
+          await type(message.channel, true, 3);
+          var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+          error = new Discord.RichEmbed()
+            .setColor(RandomNoHash)
+            .addField("Error", "Sorry, you don't have permissions to use this!"),
+            await message.channel.sendEmbed(error)
+          await type(message.channel, false, 0)
+          return;
+        }
+      }
+  
+      try {
+      return await message.guild.createRole({
+        name: nam,
+        color: colnew,
+        permissions: []
+      }).then(async die => {
+      return await sendRandomEmbed(message.channel, "Role Created", `${nam}`, colnew || 0x323232);
+      })
+    } catch(e) {
+      return;
+    }
+    };
 
 
     if (command === "say") {

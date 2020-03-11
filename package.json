@@ -9,7 +9,7 @@
     "colors": "^1.4.0",
     "discord": "",
     "discord-rich-presence": "0.0.6",
-    "discord.js": "^11.6.1",
+    "discord.js": "^11.6.2",
     "discordmeme.js": "^10.0.2",
     "e621": "0.0.2",
     "google-images": "^2.1.0",
