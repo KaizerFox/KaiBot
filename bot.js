@@ -108,7 +108,6 @@ client.on("message", async message => {
       fs.unlink('qr.png', function (err) {
         if (err) throw err;
         // if no error, file has been deleted successfully
-        console.log('File deleted!');
         return message.channel.stopTyping(true);
     }); 
 
