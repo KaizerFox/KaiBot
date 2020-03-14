@@ -9,6 +9,8 @@ let yiff = require('yiff');
 const weather = require("weather-js");
 const memer = require("discordmeme.js");
 const util = require("util");
+const qr = require("qr-image");
+const fs = require('fs')
 const owoify = require('owoify-js').default
 const p = `${config.prefix}`;
 
@@ -87,6 +89,34 @@ client.on("message", async message => {
   const command = args.shift().toLowerCase();
 
 
+  if (command === "qr") {
+    try {
+    const strx = args.join(" ");
+    if (!strx) return;
+
+    await message.channel.startTyping(3);
+    let msg = await message.channel.send("generating code, please wait...");
+
+    var qr_svg = qr.image(`${strx}`, { type: 'png' });
+    qr_svg.pipe(require('fs').createWriteStream('qr.png'))
+
+    await msg.delete(); 
+    await message.channel.send({
+      files: ['./qr.png']
+    }).then(r =>{
+    try {
+      fs.unlink('qr.png', function (err) {
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+        return message.channel.stopTyping(true);
+    }); 
+
+  }catch(e) { return console.log("no file"); } 
+  })
+} catch(e) {}
+}
+
   if(command === "invite"){
     try{
       return await message.channel.send("<https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999>");
@@ -99,7 +129,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ~qr [message] \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
      \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
      await type(message.channel,false,0);
          return;
