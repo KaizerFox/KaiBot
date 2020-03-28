@@ -92,7 +92,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}qr [message] \n ${p}gay [user] \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}qr [message] \n ${p}gay [user] \n ${p}horny [user] \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
      \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
      await type(message.channel,false,0);
          return;
@@ -137,11 +137,6 @@ client.on("message", async message => {
     }
 
      if (command === "gay") {
-      if (config.selfbot === "true") {
-        if (message.author.id !== config.owner) {
-          return;
-        }
-      }
       member = message.mentions.members.first();
       if (!member) {
         member = args.join(" ");
@@ -170,6 +165,23 @@ client.on("message", async message => {
   await type(message.channel,true,3);
   await message.channel.send(`${member} is **${Math.floor(Math.random() * 100) + 1}%** gay`);
   return await type(message.channel,false,0);
+    }
+
+    if (command === "horny") {
+      member = message.mentions.members.first();
+      if (!member) {
+        member = args.join(" ");
+      }
+
+      if (`${member}` === `<@${config.owner}>`) {
+        await type(message.channel,true,3);
+        await message.channel.send(`${member} is **100%** horny`);
+        return await type(message.channel,false,0);
+      }
+
+      await type(message.channel,true,3);
+      await message.channel.send(`${member} is **${Math.floor(Math.random() * 100) + 1}%** horny`);
+      return await type(message.channel,false,0);
     }
 
      if (command === 'stats') {
