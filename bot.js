@@ -543,17 +543,21 @@ var after = `${replace}`;
         return;
       }
       try {
+        await type(message.channel,true,3)
         const code = args.join(" ");
         let evaled = eval(code);
   
         if (typeof evaled !== "string")
           evaled = require("util").inspect(evaled);
-        
-        await message.channel.send(clean(evaled), {
+        await type(message.channel,false,0);
+        sleep(3);
+        return await message.channel.send(clean(evaled), {
           code: "xl"
         });
       } catch (err) {
-        await message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+        await type(message.channel,false,0);
+        sleep(3);
+        return await message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
       }
     }
 
@@ -610,6 +614,8 @@ var after = `${replace}`;
       if (message.author.id !== ownerID) {
         return;
       }
+
+  await type(message.channel,true,3)
   let code = args.join(" ");
   
     const util = require('util');
@@ -632,6 +638,8 @@ var after = `${replace}`;
             if (`${stdout}` == "" | `${stderr}` == "") {
               output = "output: " + stdout + "\n error: " + stderr;
             }
+            await type(message.channel,false,0)
+            sleep(3);
             return await message.channel.send("note: (ignore blank errors/outputs)\n" + `\`\`\`cmd\n${output}\n\`\`\``);
           }
   ls(`${code}`);
