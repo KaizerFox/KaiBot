@@ -88,46 +88,11 @@ client.on("message", async message => {
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
-  if (command === "qr") {
-    try {
-    const strx = args.join(" ");
-    if (!strx) return;
-
-    await message.channel.startTyping(3);
-    let msg = await message.channel.send("generating code, please wait...");
-
-    var qr_svg = qr.image(`${strx}`, { type: 'png' });
-    qr_svg.pipe(require('fs').createWriteStream('qr.png'))
-
-    await msg.delete(); 
-    await message.channel.send({
-      files: ['./qr.png']
-    }).then(r =>{
-    try {
-      fs.unlink('qr.png', function (err) {
-        if (err) throw err;
-        // if no error, file has been deleted successfully
-        return message.channel.stopTyping(true);
-    }); 
-
-  }catch(e) { return console.log("no file"); } 
-  })
-} catch(e) {}
-}
-
-  if(command === "invite"){
-    try{
-      return await message.channel.send("<https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999>");
-    } catch(e){
-      return await console.log(`${e.message}`);
-    }
-  }
-
   if (command === "help") {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ~qr [message] \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
+     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}qr [message] \n ${p}gay [user] \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
      \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
      await type(message.channel,false,0);
          return;
@@ -135,6 +100,77 @@ client.on("message", async message => {
          return;
        }
      }
+
+     if (command === "qr") {
+      try {
+      const strx = args.join(" ");
+      if (!strx) return;
+  
+      await message.channel.startTyping(3);
+      let msg = await message.channel.send("generating code, please wait...");
+  
+      var qr_svg = qr.image(`${strx}`, { type: 'png' });
+      qr_svg.pipe(require('fs').createWriteStream('qr.png'))
+  
+      await msg.delete(); 
+      await message.channel.send({
+        files: ['./qr.png']
+      }).then(r =>{
+      try {
+        fs.unlink('qr.png', function (err) {
+          if (err) throw err;
+          // if no error, file has been deleted successfully
+          return message.channel.stopTyping(true);
+      }); 
+  
+    }catch(e) { return console.log("no file"); } 
+    })
+  } catch(e) {}
+  }
+  
+    if(command === "invite"){
+      try{
+        return await message.channel.send("<https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999>");
+      } catch(e){
+        return await console.log(`${e.message}`);
+      }
+    }
+
+     if (command === "gay") {
+      if (config.selfbot === "true") {
+        if (message.author.id !== config.owner) {
+          return;
+        }
+      }
+      member = message.mentions.members.first();
+      if (!member) {
+        member = args.join(" ");
+      }
+  
+  
+      if (`${member}` === `<@${config.owner}>`) {
+        await type(message.channel,true,3);
+        await message.channel.send(`${member} is **109%** gay`);
+        return await type(message.channel,false,0);
+      }
+
+      if(`${member}` === `<@427926447617998858>`) {
+        await type(message.channel,true,3);
+        await message.channel.send(`${member} is **109%** gay`);
+        return await type(message.channel,false,0);
+      }
+
+      if(`${member}` === `<@431791835300626443>`) {
+        await type(message.channel,true,3);
+        await message.channel.send(`${member} is **69%** gay`);
+        return await type(message.channel,false,0);
+      }
+  
+    
+  await type(message.channel,true,3);
+  await message.channel.send(`${member} is **${Math.floor(Math.random() * 100) + 1}%** gay`);
+  return await type(message.channel,false,0);
+    }
 
      if (command === 'stats') {
       const memoryUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
