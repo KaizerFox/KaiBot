@@ -1,10 +1,11 @@
-//https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999
+//admin access invite: https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=8
+
+//non admin invite: https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=2147483639
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
 const colors = require("colors");
-const io = require('@pm2/io');
 let yiff = require('yiff');
 const weather = require("weather-js");
 const memer = require("discordmeme.js");
@@ -13,19 +14,12 @@ const qr = require("qr-image");
 const fs = require('fs')
 const owoify = require('owoify-js').default
 const p = `${config.prefix}`;
+var pinging = false;
 
 const die = require("discord.js/src/util/Constants.js");
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
 
 //get cucked discord
-
-io.init({
-  metrics: {
-    network: {
-      ports: true
-    }
-  }
-});
 
 function sleep(delay) {
   var start = new Date().getTime();
@@ -92,8 +86,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await sendRandomEmbed(message.channel,"command list:",`\n For everyone: \n ${p}help \n ${p}qr [message] \n ${p}gay [user] \n ${p}horny [user] \n ${p}say [message] \n ${p}addrole [color] [name] \n ~embed [color hex/random] [message] \n ~stats \n ~ping {website} \n ~8ball [question] \n ${p}weather [zip/state initials] \n ${p}permissions [user] \n ${p}ping \n ${p}invite \n ${p}userinfo [user] \n ${p}avatar [user] \n ${p}randomhex \n ~color [hex] \n ${p}uptime \n ${p}owoify [level] [message]
-     \n \n Admin Only: \n ${p}kick [user] [reason] \n ~ban [user] [reason] \n \n Owner Only: \n ${p}eval [code]  \n ${p}cmd [windows command] \n ${p}hook [message]`);
+     await message.channel.send(`<@${message.author.id}>, http://hmm465.xyz/commandlist.html`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
@@ -130,7 +123,7 @@ client.on("message", async message => {
   
     if(command === "invite"){
       try{
-        return await message.channel.send("<https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999>");
+        return await message.channel.send("admin invite: <https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=8> \n\nnon admin invite: (remove any you need to): <https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=2147483639>");
       } catch(e){
         return await console.log(`${e.message}`);
       }
@@ -199,25 +192,24 @@ client.on("message", async message => {
       var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
       var channels = client.channels.filter(c => c.type === 'text').size
       var vchannels = client.channels.filter(c => c.type === 'voice').size
-      let owoifyCpuLength = owoify(`${cpuLength}`,"owo")
-      let owoifyCpuType = owoify(`${cpuType}`,"owo")
-      let owoifyname = owoify(`${member.username}`,"uwu"); 
       const oper = require('os').platform
-      const operOwO = owoify(`${oper}`,"uwu");
+      const PID = process.pid;
+      let owoifyname = owoify(`${member.username}`,"uwu"); 
 
       const embed = new Discord.RichEmbed()
-        .setTitle("📊 Bwowot Stats - Invite")
-        .setURL(`https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=9999999999`)
+        .setTitle("📊 Bot Stats - Click To Invite")
+        .setURL(`https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=8`)
         .setColor(RandomNoHash)
-        .addField("Guiwd Cwount", `${client.guilds.size}`, true)
-        .addField("Usew Cwount", `${client.users.size}`, true)
-        .addField("Channyews", `Text: ${channels} \n Voice: ${vchannels}`, true)
-        .addField("Pwocesswow", `${owoifyCpuLength}x ${owoifyCpuType}`, true)
-        .addField("Mwemwowwy usage", `${memoryUsage}MB`, true)
-        .addField("Opewating system", `${operOwO}`,true)
-        .addField("Uptimwe", `${days} days, ${hours} hwouws, ${minutes} minyutes and ${seconds} secwonds`, true)
+        .addField("Guild Count", `${client.guilds.size}`, true)
+        .addField("User Count", `${client.users.size}`, true)
+        .addField("Channels", `Text: ${channels} \n Voice: ${vchannels}`, true)
+        .addField("Processor", `${cpuLength}x ${cpuType}`, true)
+        .addField("Memory usage", `${memoryUsage}MB`, true)
+        .addField("Operating System", `${oper}`,true)
+        .addField("Uptime", `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`, true)
+        .addField("Process Id", `${PID}`,true)
         .setTimestamp()
-        .setFooter(`Wequested by ${owoifyname}`, member.displayAvatarURL)
+        .setFooter(`requested by ${owoifyname}`, member.displayAvatarURL)
       message.channel.send({ embed });
       //return message.channel.send(`Guild count: ${client.guilds.size} \n User count: ${client.users.size}`);
   
@@ -483,17 +475,31 @@ let colnew = mystring;
           try {
             const oper = require('os').platform
             if(`${oper}` === "win32" || `${oper}` === "win64") {
-            console.log(`os is ${oper}`);
+            if(pinging === false){
+            pinging = true
+            //console.log(`os is ${oper}`);
             let strx = args.join(" ");
             const m = await message.channel.send("ok, pinging...");
             let msg = await require("child_process").execSync(`ping -n 4 ${strx}`).toString();
             await m.edit(`${msg}`, { code: "css" });
+            sleep(3);
+            return pinging = false;
+            } else {
+              return await message.channel.send("i am already pinging a site, please wait a few seconds");
+            }
           } else {
-            console.log("os is something other than windows, assuming its linux.");
+            if(pinging === false){
+            pinging = true;
+            //console.log("os is something other than windows, assuming its linux.");
             let strx = args.join(" ");
             const m = await message.channel.send("ok, pinging...");
             let msg = await require("child_process").execSync(`ping -c 4 ${strx}`).toString();
             await m.edit(`${msg}`, { code: "css" });
+            sleep(3);
+            return pinging = false;
+            } else {
+              return await message.channel.send("i am already pinging a site, please wait a few seconds");
+            }
           }
           } catch (err) {
             await message.channel.send(`\`100% packet loss\` \`\`\`xl\n${clean(err)}\n\`\`\``);
