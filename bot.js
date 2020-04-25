@@ -49,6 +49,7 @@ client.on("ready", () => {
 });
 
 
+
 async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
   if(!hex || hex === 0) {
   hex = (Math.random() * 0xFFFFFF << 0).toString(16);
@@ -86,13 +87,14 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await message.channel.send(`<@${message.author.id}>, http://hmm465.epizy.com/commandlist.html`);
+     await message.channel.send(`<@${message.author.id}>, http://hmm465.xyz/commandlist.html`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
          return;
        }
-     }
+      }
+  
 
      if (command === "qr") {
       try {
@@ -119,6 +121,26 @@ client.on("message", async message => {
     }catch(e) { return console.log("no file"); } 
     })
   } catch(e) {}
+  }
+  
+
+  if (command === "spam") {
+    let ownerID = `${config.owner}`
+    if (message.author.id !== ownerID) {
+      return;
+    }
+
+    const strx = args.join(" ");
+    
+    setInterval(async () => {
+      await message.channel.startTyping(3);
+      await console.log("typing...");
+      await message.channel.send(`${strx}`);
+      await sleep(100);
+      await console.log("stopping typing...");
+      await message.channel.stopTyping(true);
+    }, 1000);
+
   }
   
     if(command === "invite"){
