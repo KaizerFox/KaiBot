@@ -87,7 +87,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await message.channel.send(`<@${message.author.id}>, http://hmm465.xyz/commandlist.html`);
+     await message.channel.send(`<@${message.author.id}>, http://hmm465.epizy.com/commandlist.html`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
