@@ -118,7 +118,6 @@ client.on("message", async message => {
         var mystring = `${enc}`;
         mystring = mystring.replace(`${mor}`,'');
         let encnew = mystring; //removes second arugment from the string
-        console.log(`${encnew}`);
 
         if(`${encnew}` === "dec ") { //includes space cause im lazy, you can fix this if you want though.
           let demors = xmorse.decode(`${mor}`);
