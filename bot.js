@@ -110,23 +110,25 @@ client.on("message", async message => {
 
       if (command === "morse") {  //~morse dec,enc = enc  [message = mor]
         let mor = args.slice(1).join(" ");
-        if (!nam) return;
+        if (!mor) return;
   
         const enc = args.slice(0).join(" ")
         if (!enc) return;
+        
+        var mystring = `${enc}`;
+        mystring = mystring.replace(`${mor}`,'');
+        let encnew = mystring; //removes second arugment from the string
+        console.log(`${encnew}`);
 
-        if(`${enc}` === "dec") {
+        if(`${encnew}` === "dec ") { //includes space cause im lazy, you can fix this if you want though.
           let demors = xmorse.decode(`${mor}`);
           await message.channel.send(`${demors}`);
-        } else if(`${enc}` === "enc") {
+        } else if(`${encnew}` === "enc ") {
           let mors = xmorse.encode(`${mor}`);
           await message.channel.send(`${mors}`);
-        } else if(`${enc}` !== "enc" && `${enc}` !== "dec") {
-          return await message.channel.send("error, invalid arugment please use enc or dec \n enc for encoding a message, dec for decoding \n\n examples: ~morse enc hi \n ~morse dec .... ..");
+        } else if(`${encnew}` !== "enc " && `${encnew}` !== "dec ") {
+          return await message.channel.send("error, invalid arugment please use enc or dec \n enc for encoding a message, dec for decoding \n\n examples: \n ~morse enc hi \n ~morse dec .... ..");
         }
-
-        let bin = text2Binary(`${strx}`)
-        await message.channel.send(`${bin}`);
       }
   
 
