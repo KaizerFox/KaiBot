@@ -39,15 +39,6 @@ function text2Binary(string) {
   }).join(' ');
 }
 
-function text2Morse(string) {
-  var output = '';
-  for (var i = 0, l = sentence.length; i < l; i++) {
-    var letter = sentence[i].toLowerCase();
-    if (morseObj[letter]) { output += morseObj[letter] + ' '; }
-  }
-  return output;
-}
-
 async function type(channel,bool,number) {	
 if(`${bool}` === `true`) {
 return await channel.startTyping(`${number}`); 
