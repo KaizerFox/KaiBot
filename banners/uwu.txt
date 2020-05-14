@@ -1,0 +1,2 @@
+these are just backups of the embeded image when you put the https://github.com/JakobTheFurry/KaiBot/ in a site,
+you can delete this folder 
