@@ -6,9 +6,9 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config.json');
 const colors = require("colors");
-let yiff = require('yiff');
+const yiff = require('yiff');
+const xmorse = require('xmorse');
 const weather = require("weather-js");
-const memer = require("discordmeme.js");
 const util = require("util");
 const qr = require("qr-image");
 const fs = require('fs')
@@ -31,6 +31,21 @@ function clean(text) {
     return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
   else
     return text;
+}
+
+function text2Binary(string) {
+  return string.split('').map(function (char) {
+      return char.charCodeAt(0).toString(2);
+  }).join(' ');
+}
+
+function text2Morse(string) {
+  var output = '';
+  for (var i = 0, l = sentence.length; i < l; i++) {
+    var letter = sentence[i].toLowerCase();
+    if (morseObj[letter]) { output += morseObj[letter] + ' '; }
+  }
+  return output;
 }
 
 async function type(channel,bool,number) {	
@@ -94,6 +109,34 @@ client.on("message", async message => {
          return;
        }
       }
+
+      if (command === "bin") {
+        const strx = args.join(" ");
+        if (!strx) return;
+        let bin = text2Binary(`${strx}`)
+        await message.channel.send(`${bin}`);
+      }
+
+      if (command === "morse") {  //~morse dec,enc = enc  [message = mor]
+        let mor = args.slice(1).join(" ");
+        if (!nam) return;
+  
+        const enc = args.slice(0).join(" ")
+        if (!enc) return;
+
+        if(`${enc}` === "dec") {
+          let demors = xmorse.decode(`${mor}`);
+          await message.channel.send(`${demors}`);
+        } else if(`${enc}` === "enc") {
+          let mors = xmorse.encode(`${mor}`);
+          await message.channel.send(`${mors}`);
+        } else if(`${enc}` !== "enc" && `${enc}` !== "dec") {
+          return await message.channel.send("error, invalid arugment please use enc or dec \n enc for encoding a message, dec for decoding \n\n examples: ~morse enc hi \n ~morse dec .... ..");
+        }
+
+        let bin = text2Binary(`${strx}`)
+        await message.channel.send(`${bin}`);
+      }
   
 
      if (command === "qr") {
@@ -131,6 +174,7 @@ client.on("message", async message => {
     }
 
     const strx = args.join(" ");
+    if (!strx) return;
     
     setInterval(async () => {
       await message.channel.startTyping(3);
@@ -858,18 +902,6 @@ if(command === "weather") {
 });
 }
 
-if (command === "meme") {
-  let meme = await memer.meme()
-
-  const embed = new Discord.RichEmbed()
-  .setTitle('Random Meme')
-  .setImage(meme)
-  .setTimestamp()
-  .setFooter(`KaiBot`, client.user.displayAvatarURL)
-  
-  message.channel.send(embed);
-}
-  
 if (command === "badmeme") {
   let msg = await message.channel.send("Generating...")
     memes.generate(client,msg)
