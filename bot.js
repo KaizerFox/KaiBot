@@ -7,7 +7,7 @@ const client = new Discord.Client();
 const config = require('./config.json');
 const colors = require("colors");
 const yiff = require('yiff');
-const xmorse = require('xmorse');
+const morsee = require("morsee")
 const weather = require("weather-js");
 const util = require("util");
 const qr = require("qr-image");
@@ -120,10 +120,10 @@ client.on("message", async message => {
         let encnew = mystring; //removes second arugment from the string
 
         if(`${encnew}` === "dec ") { //includes space cause im lazy, you can fix this if you want though.
-          let demors = xmorse.decode(`${mor}`);
+          let demors = morsee.decode(`${mor}`);
           await message.channel.send(`${demors}`);
         } else if(`${encnew}` === "enc ") {
-          let mors = xmorse.encode(`${mor}`);
+          let mors = morsee.encode(`${mor}`);
           await message.channel.send(`${mors}`);
         } else if(`${encnew}` !== "enc " && `${encnew}` !== "dec ") {
           return await message.channel.send("error, invalid arugment please use enc or dec \n enc for encoding a message, dec for decoding \n\n examples: \n ~morse enc hi \n ~morse dec .... ..");
