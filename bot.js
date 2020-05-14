@@ -113,7 +113,10 @@ client.on("message", async message => {
         if (!mor) return;
   
         const enc = args.slice(0).join(" ")
-        if (!enc) return;
+        if (!enc) {
+          await message.channel.send("error, invalid arugment please use enc or dec \n enc for encoding a message, dec for decoding \n\n examples: \n ~morse enc hi \n ~morse dec .... ..")
+          return;
+        }
         
         var mystring = `${enc}`;
         mystring = mystring.replace(`${mor}`,'');
