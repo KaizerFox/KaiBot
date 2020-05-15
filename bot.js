@@ -851,6 +851,21 @@ if(command === "hook") {
   }
   }
 
+  if(command === "dm") {
+    if (message.author.id !== config.owner) {
+      message.channel.send("this was made ownyew onywy iny case of abuse");
+      return;
+    }
+    let member = message.mentions.members.first();
+    const strx = args.slice(1).join(' ');
+    message.channel.send(`dming <@${member.id}>`);
+    try{
+    return await member.send(`${strx}`);
+    } catch(e) {
+    return await message.channel.send(`${e.message}`);
+    }
+  }
+
   if(command === "uptime") {
 
  type(message.channel,true,3);
