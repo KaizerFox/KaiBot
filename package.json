@@ -16,7 +16,7 @@
     "hoek": "^5.0.4",
     "lodash": "^4.17.15",
     "minimist": "^1.2.5",
-    "morsee": "^1.0.6",
+    "morsify": "^2.3.1",
     "node-cmd": "^3.0.0",
     "node-fetch": "^2.6.0",
     "node-gyp": "^4.0.0",
