@@ -20,7 +20,7 @@
     "node-cmd": "^3.0.0",
     "node-fetch": "^2.6.0",
     "node-gyp": "^4.0.0",
-    "npm": "^6.14.5",
+    "npm": "^6.14.6",
     "owoify-js": "^1.0.7",
     "parse-time": "^0.1.4",
     "qr-image": "^3.2.0",
