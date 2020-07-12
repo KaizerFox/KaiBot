@@ -770,6 +770,18 @@ var after = `${replace}`;
   ls(`${code}`);
   }
 
+  if (command === "source") {
+    try {
+      await type(message.channel,true,3);
+      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
+      await message.channel.send(`<@${message.author.id}>, https://github.com/KaizerFox/KaiBot`);
+      await type(message.channel,false,0);
+          return;
+        } catch (e) {
+          return;
+        }
+  }
+
   if (command === "yiff") {
     if (message.channel.nsfw === false) {
       message.channel.send("This channel isn't marked as NSFW.");
