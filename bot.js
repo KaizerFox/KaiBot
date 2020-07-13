@@ -479,7 +479,7 @@ let colnew = mystring;
             message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`)
             await type(message.channel, false, 0);
           });
-    
+        await member.send(`you've been banned by ${message.author}, from ${message.guild.name} \n reason: ${reason}`);
         await sendRandomEmbed(message.channel, `Ban Event`, `${member} has been banned by ${message.author} \n reason: ${reason}`, 0xFF0000)
         return;
       }
@@ -521,6 +521,8 @@ let colnew = mystring;
     
         await kickMember.kick(reason)
           .catch(error => sendRandomEmbed(message.channel, `Error`, `Sorry ${message.author}, I couldn't kick because of : ${error}`, 0xFF0000))
+        
+          await member.send(`you've been kicked by ${message.author}, from ${message.guild.name} \n reason: ${reason}`);
         await sendRandomEmbed(message.channel, `Kick Event`, `${kickMember} has been kicked by ${message.author} \n reason: ${reason}`, 0xFFD000)
         return;
     
