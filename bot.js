@@ -194,7 +194,7 @@ client.on("message", async message => {
   
     if(command === "invite"){
       try{
-        return await message.channel.send("admin invite: <https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=8> \n\nnon admin invite: (remove any you need to): <https://discordapp.com/oauth2/authorize?client_id=670312397688537109&scope=bot&permissions=2147483639>");
+        return await message.channel.send("http://hmm465.epizy.com/invite.html");
       } catch(e){
         return await console.log(`${e.message}`);
       }
