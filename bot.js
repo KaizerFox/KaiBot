@@ -893,15 +893,16 @@ if(command === "hook") {
   if(command === "uptime") {
 
  type(message.channel,true,3);
- async function duration(ms) {
-  const sec = Math.floor((ms / 1000) % 60).toString();
-  const min = Math.floor((ms / (1000 * 60)) % 60).toString();
-  const hrs = Math.floor((ms / (1000 * 60 * 60)) % 60).toString();
-  const days = Math.floor((ms / (1000 * 60 * 60 * 24)) % 60).toString();
-  return await `${days.padStart(1, '0')} days, ${hrs.padStart(2, '0')} hours, ${min.padStart(2, '0')} minutes, ${sec.padStart(2, '0')} seconds, `;
-}
- 
-message.channel.send(`I have been online for: ${duration(client.uptime)}`)
+
+ let totalSeconds = (client.uptime / 1000);
+ let days = Math.floor(totalSeconds / 86400);
+ let hours = Math.floor(totalSeconds / 3600);
+ totalSeconds %= 3600;
+ let minutes = Math.floor(totalSeconds / 60);
+ let seconds = Math.round(totalSeconds % 60);
+
+await message.channel.send(`Uptime ${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`);
+return await type(message.channel,false,0);
 }
 
 if(command === "weather") {
