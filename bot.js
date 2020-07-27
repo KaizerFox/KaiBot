@@ -558,6 +558,7 @@ let colnew = mystring;
             sleep(3);
             return pinging = false;
             } else {
+              pinging = false;
               return await message.channel.send("i am already pinging a site, please wait a few seconds");
             }
           } else {
@@ -571,6 +572,7 @@ let colnew = mystring;
             sleep(3);
             return pinging = false;
             } else {
+              pinging = false;
               return await message.channel.send("i am already pinging a site, please wait a few seconds");
             }
           }
