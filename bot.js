@@ -13,6 +13,7 @@ const util = require("util");
 const qr = require("qr-image");
 const fs = require('fs')
 const owoify = require('owoify-js').default
+const upsidedown = require('upsidedown');
 const p = `${config.prefix}`;
 var pinging = false;
 
@@ -169,6 +170,14 @@ client.on("message", async message => {
     }catch(e) { return console.log("no file"); } 
     })
   } catch(e) {}
+  }
+
+  if (command ===  "upsidedown") {
+    const strx = args.join(" ");
+    if (!strx) return;
+
+    var ok = upsidedown(`${strx}`);
+    return await message.channel.send(`${ok}`);
   }
   
 
