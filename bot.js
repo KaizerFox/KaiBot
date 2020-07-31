@@ -172,7 +172,7 @@ client.on("message", async message => {
   } catch(e) {}
   }
 
-  if (command ===  "upsidedown") {
+  if (command ===  "upsidedown" || command === "upside") {
     const strx = args.join(" ");
     if (!strx) return;
 
