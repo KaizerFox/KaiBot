@@ -21,7 +21,7 @@
     "node-fetch": "^2.6.0",
     "node-gyp": "^4.0.0",
     "npm": "^6.14.7",
-    "omegle-node": "^1.1.4",
+    "omegle-textchat": "^1.0.0-alpha.1",
     "owoify-js": "^1.0.7",
     "parse-time": "^0.1.4",
     "qr-image": "^3.2.0",

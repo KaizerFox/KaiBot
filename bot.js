@@ -18,7 +18,7 @@ const p = `${config.prefix}`;
 var pinging = false;
 
 //omegle values v
-const Omegle = require("omegle-node")
+const Omegle = require("omegle-textchat")
 const om = new Omegle()
 
 var session = false
@@ -73,13 +73,21 @@ om.on("waiting", () => {
   }
 })
 
-om.on("connected", () => {
+om.connect(function(err) {
+  if ( err ) {
+    console.log(err);
+    return omchannel.send("there has been an error connecting, try again.");
+  }
   omchannel.send("Connected, remember you're completely anonymous, no one will know your identity, **do not share any personal data** \n to end the chat do ~endchat or ~end")
-})
+});
 
 om.on("gotMessage", function(msg) {
   omchannel.send(`Stranger: ${msg}`)
 })
+
+om.on('typing', function() {
+  console.log('Stranger is typing.');
+});
 
 om.on("strangerDisconnected", () => {
   omchannel.send("Stranger Disconnected")
@@ -119,7 +127,7 @@ async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
 client.on("message", async message => {
 
   if (session == true) {
-       await om.send(`random discord people: ${message.content}`);
+       await om.say(`random discord people: ${message.content}`);
 }
 
   if (message.content.indexOf(config.prefix) !== 0) return;
