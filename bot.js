@@ -21,8 +21,8 @@ const p = `${config.prefix}`;
 var pinging = false;
 
 //omegle values v
-const Omegle = require('omegle').Omegle;
-const om = new Omegle()
+var Omegle = require('omegle-node');
+var om = new Omegle(); //create an instance of `Omegle`
 
 var session = false
 
@@ -82,17 +82,41 @@ om.on("gotMessage", function(msg) {
 })
 
 om.on("strangerDisconnected", () => {
+  om.disconnect();
+  session = true
   omchannel.send("Stranger Disconnected")
 })
 
-om.on("recaptchaRequired", () => {
- 
- om.disconnect(function() {
-  session = false;
-  return omchannel.send("recaptcha is required, please try again, automatically disconnected");
- })
- 
-})
+om.on('recaptchaRequired',function(challenge){
+	//challenge is the link to the recaptcha image.
+	message.channel.send(`prove you're not a robot: ${challenge} \n to solve do ~answer [answer]`);
+	//after solving the captcha, send the answer to omegle by calling
+	// om.solveReCAPTCHA(answer);
+});
+
+om.on('commonLikes',function(likes){
+	omchannel.send('Common likes: ' + likes);
+});
+
+om.on('gotID',function(id){
+	omchannel.send('Connected to server as: ' + id);
+	setTimeout(function(){
+		if(!om.connected()){
+			om.stopLookingForCommonLikes(); // or you could call om.slfcl()
+			omchannel.send('Stranger did not connect in time, retrying...');
+		}
+	},5000);
+});
+
+om.on('typing',function(){
+	console.log('Stranger is typing...');
+});
+
+om.on('stoppedTyping',function(){
+	console.log('Stranger stopped typing.');
+});
+
+
 
 
 
@@ -161,21 +185,23 @@ client.on("message", async message => {
         if(session === false) {
         session = true
         omchannel = message.channel
-        om.start();
         chatter = message.author
+        await om.start();
         } else {
           return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
         }
       }
 
+      if(commmand === "answer") {
+        const strx = args.join(" ");
+        return await om.solveReCAPTCHA(strx);
+      }
+
       if(command === "endchat" || command == "end") {
         if(session === true) {
-
-        om.disconnect(async function(){
-          session = false
-          return await message.channel.send("Disconnected");
-        });
-  
+        await om.disconnect();
+        session = false
+        return await message.channel.send("Disconnected");
         } else {
          return await message.channel.send("there is no session to be ended");
         }
