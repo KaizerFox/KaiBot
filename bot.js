@@ -17,6 +17,18 @@ const upsidedown = require('upsidedown');
 const p = `${config.prefix}`;
 var pinging = false;
 
+//omegle values v
+const Omegle = require("omegle-node")
+const om = new Omegle()
+
+var session = false
+
+var omchannel
+
+var chatter 
+
+//end of omegle values
+
 const die = require("discord.js/src/util/Constants.js");
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
 
@@ -55,6 +67,25 @@ client.on("ready", () => {
   console.log("loaded".green)
 });
 
+om.on("waiting", () => {
+  if (session == true) {
+      omchannel.send("Waiting for stranger")
+  }
+})
+
+om.on("connected", () => {
+  omchannel.send("Connected, remember you're completely anonymous, no one will know your identity, **do not share any personal data** \n to end the chat do ~endchat or ~end")
+})
+
+om.on("gotMessage", function(msg) {
+  omchannel.send(`Stranger: ${msg}`)
+})
+
+om.on("strangerDisconnected", () => {
+  omchannel.send("Stranger Disconnected")
+})
+
+
 
 
 async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
@@ -86,6 +117,11 @@ async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
 
 
 client.on("message", async message => {
+
+  if (session == true) {
+       await om.send(`random discord people: ${message.content}`);
+}
+
   if (message.content.indexOf(config.prefix) !== 0) return;
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
@@ -111,6 +147,27 @@ client.on("message", async message => {
       return await type(message.channel,false,0);
       }
       
+
+      if (command === "chat") {
+        if(session === false) {
+        session = true
+        omchannel = message.channel
+        om.connect()
+        chatter = message.author
+        } else {
+          return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
+        }
+      }
+
+      if(command === "endchat" || command == "end") {
+        if(session === true) {
+        om.disconnect()
+        session = false
+        return await message.channel.send("Disconnected");
+        } else {
+         return await message.channel.send("there is no session to be ended");
+        }
+      }
 
       if (command === "bin") {
         const strx = args.join(" ");
