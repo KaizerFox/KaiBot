@@ -73,14 +73,6 @@ om.on("waiting", () => {
   }
 })
 
-om.connect(function(err) {
-  if ( err ) {
-    console.log(err);
-    return omchannel.send("there has been an error connecting, try again.");
-  }
-  omchannel.send("Connected, remember you're completely anonymous, no one will know your identity, **do not share any personal data** \n to end the chat do ~endchat or ~end")
-});
-
 om.on("gotMessage", function(msg) {
   omchannel.send(`Stranger: ${msg}`)
 })
@@ -160,8 +152,17 @@ client.on("message", async message => {
         if(session === false) {
         session = true
         omchannel = message.channel
-        om.connect()
         chatter = message.author
+
+        om.connect(function(err) {
+          if ( err ) {
+            console.log(err);
+            return message.channel.send("there has been an error connecting, try again.");
+          }
+          session = true;
+          return message.channel.send("Connected, remember you're completely anonymous, no one will know your identity, **do not share any personal data** \n to end the chat do ~endchat or ~end");
+        });
+
         } else {
           return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
         }
@@ -169,7 +170,7 @@ client.on("message", async message => {
 
       if(command === "endchat" || command == "end") {
         if(session === true) {
-        om.disconnect()
+        om.disconnect(done)
         session = false
         return await message.channel.send("Disconnected");
         } else {
