@@ -14,23 +14,23 @@ const qr = require("qr-image");
 const fs = require('fs')
 const owoify = require('owoify-js').default
 const upsidedown = require('upsidedown');
+const Human = require('human');
+const die = require("discord.js/src/util/Constants.js");
+die.DefaultOptions.ws.properties.$browser = `Discord Android`;
 const p = `${config.prefix}`;
 var pinging = false;
 
 //omegle values v
-const Omegle = require("omegle-node")
+const Omegle = require('omegle').Omegle;
 const om = new Omegle()
 
 var session = false
 
 var omchannel
 
-var chatter 
-
 //end of omegle values
 
-const die = require("discord.js/src/util/Constants.js");
-die.DefaultOptions.ws.properties.$browser = `Discord Android`;
+
 
 //get cucked discord
 
@@ -83,6 +83,15 @@ om.on("gotMessage", function(msg) {
 
 om.on("strangerDisconnected", () => {
   omchannel.send("Stranger Disconnected")
+})
+
+om.on("recaptchaRequired", () => {
+ 
+ om.disconnect(function() {
+  session = false;
+  return omchannel.send("recaptcha is required, please try again, automatically disconnected");
+ })
+ 
 })
 
 
@@ -152,7 +161,7 @@ client.on("message", async message => {
         if(session === false) {
         session = true
         omchannel = message.channel
-        om.connect()
+        om.start();
         chatter = message.author
         } else {
           return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
@@ -161,9 +170,12 @@ client.on("message", async message => {
 
       if(command === "endchat" || command == "end") {
         if(session === true) {
-        om.disconnect()
-        session = false
-        return await message.channel.send("Disconnected");
+
+        om.disconnect(async function(){
+          session = false
+          return await message.channel.send("Disconnected");
+        });
+  
         } else {
          return await message.channel.send("there is no session to be ended");
         }
