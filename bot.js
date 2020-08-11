@@ -180,21 +180,20 @@ client.on("message", async message => {
       return await type(message.channel,false,0);
       }
       
+      if(command === "answer") {
+        const strx = args.join(" ");
+        return await om.solveReCAPTCHA(strx);
+      }
 
       if (command === "chat") {
         if(session === false) {
         session = true
         omchannel = message.channel
         chatter = message.author
-        await om.start();
+        await om.connect()
         } else {
           return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
         }
-      }
-
-      if(commmand === "answer") {
-        const strx = args.join(" ");
-        return await om.solveReCAPTCHA(strx);
       }
 
       if(command === "endchat" || command == "end") {
