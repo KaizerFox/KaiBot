@@ -89,7 +89,7 @@ om.on("strangerDisconnected", () => {
 
 om.on('recaptchaRequired',function(challenge){
 	//challenge is the link to the recaptcha image.
-	message.channel.send(`prove you're not a robot: ${challenge} \n to solve do ~answer [answer]`);
+	omchannel.send(`prove you're not a robot: ${challenge} \n to solve do ~answer [answer]`);
 	//after solving the captcha, send the answer to omegle by calling
 	// om.solveReCAPTCHA(answer);
 });
@@ -98,22 +98,12 @@ om.on('commonLikes',function(likes){
 	omchannel.send('Common likes: ' + likes);
 });
 
-om.on('gotID',function(id){
-	omchannel.send('Connected to server as: ' + id);
-	setTimeout(function(){
-		if(!om.connected()){
-			om.stopLookingForCommonLikes(); // or you could call om.slfcl()
-			omchannel.send('Stranger did not connect in time, retrying...');
-		}
-	},5000);
-});
-
 om.on('typing',function(){
-	console.log('Stranger is typing...');
+  omchannel.send('Stranger is typing...');
 });
 
 om.on('stoppedTyping',function(){
-	console.log('Stranger stopped typing.');
+	omchannel.send('Stranger stopped typing.');
 });
 
 
@@ -186,13 +176,13 @@ client.on("message", async message => {
         session = true
         omchannel = message.channel
         chatter = message.author
-        await om.start();
+        await om.connect()
         } else {
           return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
         }
       }
 
-      if(commmand === "answer") {
+      if(command === "answer") {
         const strx = args.join(" ");
         return await om.solveReCAPTCHA(strx);
       }
