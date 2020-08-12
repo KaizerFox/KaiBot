@@ -14,11 +14,23 @@ const qr = require("qr-image");
 const fs = require('fs')
 const owoify = require('owoify-js').default
 const upsidedown = require('upsidedown');
+const Human = require('human');
+const die = require("discord.js/src/util/Constants.js");
+die.DefaultOptions.ws.properties.$browser = `Discord Android`;
 const p = `${config.prefix}`;
 var pinging = false;
 
-const die = require("discord.js/src/util/Constants.js");
-die.DefaultOptions.ws.properties.$browser = `Discord Android`;
+//omegle values v
+var Omegle = require('omegle-node');
+var om = new Omegle(); //create an instance of `Omegle`
+
+var session = false
+
+var omchannel
+
+//end of omegle values
+
+
 
 //get cucked discord
 
@@ -55,6 +67,58 @@ client.on("ready", () => {
   console.log("loaded".green)
 });
 
+om.on("waiting", () => {
+  if (session == true) {
+      omchannel.send("Waiting for stranger")
+  }
+})
+
+om.on("connected", () => {
+  omchannel.send("Connected, remember you're completely anonymous, no one will know your identity, **do not share any personal data** \n to end the chat do ~endchat or ~end")
+})
+
+om.on("gotMessage", function(msg) {
+  omchannel.send(`Stranger: ${msg}`)
+})
+
+om.on("strangerDisconnected", () => {
+  om.disconnect();
+  session = true
+  omchannel.send("Stranger Disconnected")
+})
+
+om.on('recaptchaRequired',function(challenge){
+	//challenge is the link to the recaptcha image.
+	message.channel.send(`prove you're not a robot: ${challenge} \n to solve do ~answer [answer]`);
+	//after solving the captcha, send the answer to omegle by calling
+	// om.solveReCAPTCHA(answer);
+});
+
+om.on('commonLikes',function(likes){
+	omchannel.send('Common likes: ' + likes);
+});
+
+om.on('gotID',function(id){
+	omchannel.send('Connected to server as: ' + id);
+	setTimeout(function(){
+		if(!om.connected()){
+			om.stopLookingForCommonLikes(); // or you could call om.slfcl()
+			omchannel.send('Stranger did not connect in time, retrying...');
+		}
+	},5000);
+});
+
+om.on('typing',function(){
+	console.log('Stranger is typing...');
+});
+
+om.on('stoppedTyping',function(){
+	console.log('Stranger stopped typing.');
+});
+
+
+
+
 
 
 async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
@@ -86,6 +150,11 @@ async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
 
 
 client.on("message", async message => {
+
+  if (session == true) {
+       await om.send(`random discord people: ${message.content}`);
+}
+
   if (message.content.indexOf(config.prefix) !== 0) return;
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
@@ -111,6 +180,32 @@ client.on("message", async message => {
       return await type(message.channel,false,0);
       }
       
+
+      if (command === "chat") {
+        if(session === false) {
+        session = true
+        omchannel = message.channel
+        chatter = message.author
+        await om.start();
+        } else {
+          return await message.channel.send("there is already a session going on, this is to prevent high network usage.");
+        }
+      }
+
+      if(commmand === "answer") {
+        const strx = args.join(" ");
+        return await om.solveReCAPTCHA(strx);
+      }
+
+      if(command === "endchat" || command == "end") {
+        if(session === true) {
+        await om.disconnect();
+        session = false
+        return await message.channel.send("Disconnected");
+        } else {
+         return await message.channel.send("there is no session to be ended");
+        }
+      }
 
       if (command === "bin") {
         const strx = args.join(" ");
