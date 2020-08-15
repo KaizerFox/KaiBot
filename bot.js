@@ -78,7 +78,13 @@ om.on("connected", () => {
 })
 
 om.on("gotMessage", function(msg) {
-  omchannel.send(`Stranger: ${msg}`)
+  var mystring = `${msg}`;
+  if(mystring.includes("http") == true) {
+  ok = "[message redacted, reason: link]"
+  } else {
+  ok = msg
+  }
+  omchannel.send(`Stranger: ${ok}`)
 })
 
 om.on("strangerDisconnected", () => {
