@@ -291,6 +291,15 @@ client.on("message", async message => {
     }, 1000);
 
   }
+
+  if(command === "ship") {
+  let strx = args.join(" ");
+  if (!strx) return;
+  let jtrx = args.slice(1).join(' ');
+  if(!jtrx) return;
+  
+  return await message.channel.send(`MATCH MAKING: \n ${strx} + ${jtrx} \n **${Math.floor(Math.random() * 100) + 1}%**`);
+  }
   
     if(command === "invite"){
       try{
