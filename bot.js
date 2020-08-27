@@ -297,8 +297,12 @@ client.on("message", async message => {
   if (!strx) return;
   let jtrx = args.slice(1).join(' ');
   if(!jtrx) return;
+
+  var mystring = `${strx}`;
+  mystring = mystring.replace(`${jtrx}`,'');
+  let colnew = mystring; 
   
-  return await message.channel.send(`MATCH MAKING: \n ${strx} + ${jtrx} \n **${Math.floor(Math.random() * 100) + 1}%**`);
+  return await message.channel.send(`MATCH MAKING: \n ${colnew} + ${jtrx} \n **${Math.floor(Math.random() * 100) + 1}%**`);
   }
   
     if(command === "invite"){
