@@ -16,6 +16,7 @@ const owoify = require('owoify-js').default
 const upsidedown = require('upsidedown');
 const Human = require('human');
 const die = require("discord.js/src/util/Constants.js");
+const website = "https://hmm465.xyz";
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
 const p = `${config.prefix}`;
 var pinging = false;
@@ -159,7 +160,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await message.channel.send(`<@${message.author.id}>, http://hmm465.epizy.com/commandlist.html`);
+     await message.channel.send(`<@${message.author.id}>, ${website}/commandlist.html`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
@@ -307,7 +308,7 @@ client.on("message", async message => {
   
     if(command === "invite"){
       try{
-        return await message.channel.send("http://hmm465.epizy.com/invite.html");
+        return await message.channel.send(`${website}/invite.html`);
       } catch(e){
         return await console.log(`${e.message}`);
       }
