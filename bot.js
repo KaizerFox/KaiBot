@@ -160,7 +160,7 @@ client.on("message", async message => {
     try {
      await type(message.channel,true,3);
      var RandomNoHash = (Math.random() * 0xFFFFFF << 0).toString(16);
-     await message.channel.send(`<@${message.author.id}>, ${website}/commandlist.html`);
+     await message.channel.send(`<@${message.author.id}>, ${website}/commandlist.php`);
      await type(message.channel,false,0);
          return;
        } catch (e) {
@@ -308,7 +308,7 @@ client.on("message", async message => {
   
     if(command === "invite"){
       try{
-        return await message.channel.send(`${website}/invite.html`);
+        return await message.channel.send(`${website}/invite.php`);
       } catch(e){
         return await console.log(`${e.message}`);
       }
