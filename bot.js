@@ -119,6 +119,7 @@ om.on('stoppedTyping',function(){
 
 
 async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
+  try {
   if(!hex || hex === 0) {
   hex = (Math.random() * 0xFFFFFF << 0).toString(16);
   } 
@@ -142,7 +143,9 @@ async function sendRandomEmbed(channel,title,message,hex,image,thumbnail) {
     .addField(`${title}`, `${message}`),
     await channel.sendEmbed(embed)
   }
-
+} catch(e) {
+  return message.channel.send(`an error occured, or the bot doesnt have send embed perms: ${e.message}`);
+}
 }
 
 
@@ -395,7 +398,12 @@ client.on("message", async message => {
         .addField("Process Id", `${PID}`,true)
         .setTimestamp()
         .setFooter(`requested by ${owoifyname}`, member.displayAvatarURL)
+
+      try {
       message.channel.send({ embed });
+      } catch(e) {
+        return message.channel.send(`an error occured, or the bot doesnt have send embed perms: ${e.message}`);
+      }
       //return message.channel.send(`Guild count: ${client.guilds.size} \n User count: ${client.users.size}`);
   
     }
@@ -691,6 +699,7 @@ let colnew = mystring;
             }
           }
           } catch (err) {
+            pinging = false;
             await message.channel.send(`\`100% packet loss\` \`\`\`xl\n${clean(err)}\n\`\`\``);
           }
         }
