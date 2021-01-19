@@ -16,8 +16,8 @@ const owoify = require('owoify-js').default
 const upsidedown = require('upsidedown');
 const Human = require('human');
 const die = require("discord.js/src/util/Constants.js");
-const website = "https://hmm465.xyz";
 die.DefaultOptions.ws.properties.$browser = `Discord Android`;
+const website = "https://hmm465.xyz";
 const p = `${config.prefix}`;
 var pinging = false;
 
@@ -308,7 +308,7 @@ client.on("message", async message => {
   
     if(command === "invite"){
       try{
-        return await message.channel.send(`${website}/invite.php`);
+        return await message.channel.send(`${website}/botinvite.php`);
       } catch(e){
         return await console.log(`${e.message}`);
       }
