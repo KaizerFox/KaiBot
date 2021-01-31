@@ -18,7 +18,7 @@ module.exports = {
             // files object contains all files names
             // log them on console
             files.forEach(file => {
-                string = string + `${file.replace('.js', '')}, `;
+                string = string + `${file.replace('.js', '')}\n `;
             });
 
             message.channel.send(string);
