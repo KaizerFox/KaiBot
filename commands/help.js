@@ -21,7 +21,7 @@ module.exports = {
                 string = string + `${file.replace('.js', '')}\n `;
             });
 
-            message.channel.send(string);
+            message.channel.send(`${string} \n or visit http://kaibot.rf.gd`);
         });
 
         
