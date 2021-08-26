@@ -28,7 +28,7 @@ module.exports = {
     
       
     type(message.channel,true,3);
-    message.channel.send(`${member} is **${Math.floor(Math.random() * 100) + 1}%** gay`);
+    message.channel.send(`${member} is **${Math.floor(Math.random() * 1000) + 1}%** gay`);
     return type(message.channel,false,0);
          
 	},
