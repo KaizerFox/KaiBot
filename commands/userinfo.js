@@ -7,7 +7,6 @@ module.exports = {
 
 		let member = message.mentions.members.first()
 		if (!member) {
-		  await type(message.channel,true,3);
 		  await message.reply("usage: !userinfo [@user]");
 		  return await type(message.channel,false,0);
 		}
