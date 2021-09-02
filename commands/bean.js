@@ -10,7 +10,19 @@ module.exports = {
           member = args.join(" ");
         }
 
-		member.setNickname(`(beaned)` + ` ${member.displayName}`);
-        await message.channel.send(`✅ Sucessfully Beaned ${member}`);
+		try {
+            member.setNickname(`(beaned)` + ` ${member.displayName}`);
+            await message.channel.send(`✅ Sucessfully Beaned ${member}`);
+            return;
+            } catch(e){ 
+                try { 
+                member.setNickname(`(beaned)` + ` ${member.user.username}`); 
+                await message.channel.send(`✅ Sucessfully Beaned, ${member} but used username cause of length`);
+                return;
+            } catch(e) {
+                message.channel.send(`Cannot bean because: ${e.message}`);
+                return;
+            }
+            }
 	},
 };
