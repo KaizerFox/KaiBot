@@ -1,5 +1,3 @@
-const { CategoryChannel } = require("discord.js");
-
 module.exports = {
 	name: 'bean',
 	description: 'bean someone',
@@ -13,19 +11,8 @@ module.exports = {
         }
 
 
-        try {
             member.setNickname(`(beaned)` + ` ${member.displayName}`);
             await message.channel.send(`✅ Sucessfully Beaned ${member}`);
-            } catch(e) {
-                try {
-                member.setNickname(`(beaned)` + ` ${member.user.username}`); 
-                await message.channel.send(`✅ Sucessfully Beaned, ${member} but used username cause of length`);
-                return;
-                } catch(e) {
-                    message.channel.send(`Couldn't bean user because: ${e.message}`);
-                    return;
-                }
-            }
-           
+
 	},
 };
