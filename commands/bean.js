@@ -10,7 +10,7 @@ module.exports = {
           member = args.join(" ");
         }
 
-		member.setNickname(`(beaned)` + ` ${member.user.username}`);
+		member.setNickname(`(beaned)` + ` ${member.displayName}`);
         await message.channel.send(`✅ Sucessfully Beaned ${member.user.username}`);
 	},
 };
