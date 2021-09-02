@@ -11,6 +11,6 @@ module.exports = {
         }
 
 		member.setNickname(`(beaned)` + ` ${member.displayName}`);
-        await message.channel.send(`✅ Sucessfully Beaned ${member.user.username}`);
+        await message.channel.send(`✅ Sucessfully Beaned ${member}`);
 	},
 };
