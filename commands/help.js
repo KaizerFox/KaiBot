@@ -2,6 +2,8 @@ module.exports = {
     name: 'help',
     description: 'help command',
     execute(message) {
+        const config = require("./../config.json");
+
         const fs = require('fs');
 
         // directory path
@@ -18,7 +20,7 @@ module.exports = {
             // files object contains all files names
             // log them on console
             files.forEach(file => {
-                string = string + `${file.replace('.js', '')}\n `;
+                string = string + `${config.prefix}` + `${file.replace('.js', '')}\n `;
             });
 
             message.channel.send(`${string} \n or visit http://kaibot.rf.gd`);
