@@ -1,19 +1,16 @@
 const path = require('path');
 
 module.exports = {
-	name: 'sexflag',
-	description: 'Turns any image into a sexuality!!!!! uwu',
-	args: true,
-	execute(message, args) { 
-		if (message.attachments.size > 0) {
-			let request = require(`request`);
-			let fs = require('fs');
-			var imgSent = (message.attachments).array();
+    name: 'sexflag',
+    description: 'Turns any image into a sexuality!!!!! uwu',
+    args: true,
+    execute(message, args) { 
+        if (message.attachments.size === 1) {
+            var extension = message.attachment.contentType
+            if(extension == "png" || extension == "jpg" || extension == "jpeg" || extension == "webp") {
+                fs.writeFileSync(`./${a.name}`, a.file)
+            }
+        }  
 
-			   request.get(imgSent.proxyURL)
-            .on('error', console.error)
-            .pipe(fs.createWriteStream(`Img-${Date.now()}`));//The "Img-${Date.now}" Guarantees Unique file names.
-    }  
-
-	},
+    },
 };
