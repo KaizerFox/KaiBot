@@ -23,7 +23,7 @@ module.exports = {
                 string = string + `${config.prefix}` + `${file.replace('.js', '')}\n `;
             });
 
-            message.channel.send(`${string} \n or visit http://kaibot.rf.gd`);
+            message.channel.send(`${string} \n or visit http://kaizer.ga`);
         });
 
         
