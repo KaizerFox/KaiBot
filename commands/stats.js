@@ -26,7 +26,7 @@ module.exports = {
   
         const embed = new Discord.MessageEmbed()
           .setTitle("📊 Bot Stats - Click To Invite")
-          .setURL(`https://discord.com/oauth2/authorize?client_id=1007806243676622889&scope=bot&permissions=1099509530623`)
+          .setURL(`https://discord.com/oauth2/authorize?client_id=1007806243676622889&scope=bot&permissions=8`)
           .setColor(RandomNoHash)
           .addField("Guild Count", `${client.guilds.cache.size}`, true)
           .addField("User Count", `${client.users.cache.size}`, true)
