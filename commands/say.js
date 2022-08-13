@@ -3,8 +3,11 @@ module.exports = {
 	description: 'say something',
 	async execute(message, args) {
 
-		let strx = args.join(" ");
+		const Util = require('../node_modules/discord.js/src/util/Util.js');
 
-		return await message.channel.send(`${strx}`);
+		let strx = args.join(" ");
+		const msg = Util.removeMentions(strx);
+
+		return await message.channel.send(`${msg}`);
 	},
 };
