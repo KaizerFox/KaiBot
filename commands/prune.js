@@ -2,6 +2,7 @@ module.exports = {
 	name: 'prune',
 	description: 'Prune up to 99 messages.',
 	execute(message, args) {
+		if (message.author.guild_permissions.administrator == true) {
 		const amount = parseInt(args[0]) + 1;
 
 		if (isNaN(amount)) {
@@ -14,5 +15,9 @@ module.exports = {
 			console.error(err);
 			message.channel.send('there was an error trying to prune messages in this channel!');
 		});
+	} else {
+		message.channel.send("lol no, ask for admin first.")
+		return;
+	}
 	},
 };
