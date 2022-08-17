@@ -5,7 +5,7 @@ const { prefix, token } = require('./config.json');
 const Constants = Discord.Constants;
 Constants.DefaultOptions.ws.properties.$browser = `Discord Android`;
 
-const client = new Discord.Client();
+const client = new Discord.Client({disableMentions: "everyone"});
 client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
