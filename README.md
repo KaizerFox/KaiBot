@@ -10,7 +10,7 @@
 
 # = LINKS: =
 
-## [website](http://hmm465.epizy.com/)
+## [website](https://kaizer.ga/)
 
 ## [github](https://github.com/JakobTheFurry/KaiBot)
 
