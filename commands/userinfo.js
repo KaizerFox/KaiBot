@@ -1,48 +1,37 @@
+const path = require('path');
+const fs = require('fs');
+const axios = require('axios');
+const ColorThief = require('color-thief-node');
+const Jimp = require('jimp');
+
 module.exports = {
-	name: 'userinfo',
-	description: 'Display info about yourself or other users',
-	async execute(message) {
+    name: 'sexflag',
+    description: 'Turns any image into a sexuality!!!!! uwu',
+    args: true,
+    async execute(message, args) { 
+        const avatarUrl = message.member.user.displayAvatarURL({
+            "format": "png",
+            "dynamic": true,
+            "size": 4096
+        });
 
-		const Discord = require('./../node_modules/discord.js');
+        const colors = await ColorThief.getPaletteFromURL(avatarUrl, 3, true);
+        const flag = await new Jimp(500, 500);
+        for (let i = 0; i < 3; i++) {
+            flag.scan(0, i * 500 / 3, 500, 500 / 3, (x, y, idx) => {
+                flag.bitmap.data[idx + 0] = colors[i][0];
+                flag.bitmap.data[idx + 1] = colors[i][1];
+                flag.bitmap.data[idx + 2] = colors[i][2];
+                flag.bitmap.data[idx + 3] = 255;
+            });
+        }
+        const flagPath = `./temp/flag_${message.member.user.id}.png`;
+        await flag.writeAsync(flagPath);
 
-		let member = message.mentions.members.first()
-		if (!member) {
-		  await message.reply("usage: !userinfo [@user]");
-		  return await type(message.channel,false,0);
-		}
+        // Send the flag image back to the user.
+        await message.channel.send({ files: [flagPath] });
 
-		let User = member.user
-		let UserName = member.user.username
-		let Color = member.displayHexColor
-		let ID = member.id
-		let JoinedAt = member.joinedAt
-	  
-		if(member.user.bot == false) {
-		  emo = "❌";
-		} else {
-		  emo = "✅";
-		}
-	  
-			const embed = new Discord.MessageEmbed()
-				.setColor(`${Color}`)
-				.setTitle(`${UserName}'s Info`)
-				.setThumbnail(member.user.displayAvatarURL({
-					"format": "png",
-					"dynamic": true,
-					"size": 4096
-					}))
-				.setFooter(`bot account: ${emo}`)
-				.setDescription(`
-				• Nickname: ${member.nickname}
-				• ID: ${ID}
-				• Join Date: ${JoinedAt} 
-				• Created at: ${User.createdAt}
-				• Status: ${User.presence.status}
-				• Game: ${User.presence.game ? User.presence.game.name : 'None'}`);
-			return await message.channel.send(embed);
-		//await type(message.channel,true,3); 
-		//await sendRandomEmbed(message.channel,"User's Info:",`name: ${User} \n id: ${ID} \n Join Date: ${JoinedAt} \n Highest role: ${HighestRole}`);
-		//return await type(message.channel,false,0);
-
-	},
+        // Delete the temporary file.
+        fs.unlinkSync(flagPath);
+    },
 };
